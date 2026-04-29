@@ -40,6 +40,7 @@ import org.example.project.data.CarBrand
 import org.example.project.data.MECHANICS
 import org.example.project.data.Mechanic
 import org.example.project.data.Specialty
+import org.example.project.ui.i18n.LocalStrings
 import org.example.project.ui.icons.IconBack
 import org.example.project.ui.icons.IconChevron
 import org.example.project.ui.icons.IconStar
@@ -54,6 +55,7 @@ fun MapScreen(
     onBack: () -> Unit,
     onPickMech: (Mechanic) -> Unit,
 ) {
+    val s = LocalStrings.current
     val mechs = MECHANICS.filter { it.specialties.contains(spec.id) }
     var active by remember { mutableStateOf(mechs.firstOrNull()) }
 
@@ -102,13 +104,13 @@ fun MapScreen(
                     SpecIcon(id = spec.id, size = 16.dp, color = theme.text)
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "${spec.name} · ${brand.name}",
+                            text = "${s.specialtyName(spec.id)} · ${brand.name}",
                             color = theme.text,
                             fontSize = 13.sp,
                             fontWeight = FontWeight.SemiBold,
                         )
                         Text(
-                            text = "${mechs.size} NEARBY",
+                            text = "${mechs.size} ${s.nearby}",
                             color = theme.textMute,
                             fontSize = 10.sp,
                         )

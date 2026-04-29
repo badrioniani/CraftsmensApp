@@ -27,11 +27,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.example.project.data.Mechanic
 import org.example.project.ui.components.AppButton
+import org.example.project.ui.i18n.LocalStrings
 import org.example.project.ui.icons.IconCheck
 import org.example.project.ui.theme.CraftsmenColors
 
 @Composable
 fun ConfirmScreen(theme: CraftsmenColors, mech: Mechanic, onDone: () -> Unit) {
+    val s = LocalStrings.current
     Column(
         modifier = Modifier.fillMaxSize().background(theme.bg)
             .padding(start = 24.dp, end = 24.dp, top = 48.dp, bottom = 20.dp),
@@ -50,7 +52,7 @@ fun ConfirmScreen(theme: CraftsmenColors, mech: Mechanic, onDone: () -> Unit) {
         }
         Spacer(Modifier.height(24.dp))
         Text(
-            text = "You're booked.",
+            text = s.booked,
             color = theme.text,
             fontSize = 26.sp,
             fontWeight = FontWeight.SemiBold,
@@ -58,7 +60,7 @@ fun ConfirmScreen(theme: CraftsmenColors, mech: Mechanic, onDone: () -> Unit) {
         )
         Spacer(Modifier.height(10.dp))
         Text(
-            text = "${mech.name} will see you Wednesday at 11:00 AM. We sent a confirmation to your phone.",
+            text = s.bookedSubtitle(mech.name),
             color = theme.textDim,
             fontSize = 14.sp,
             textAlign = TextAlign.Center,
@@ -96,7 +98,7 @@ fun ConfirmScreen(theme: CraftsmenColors, mech: Mechanic, onDone: () -> Unit) {
                 }
                 Column {
                     Text(text = mech.name, color = theme.text, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
-                    Text(text = "WED 29 APR · 11:00 AM", color = theme.textDim, fontSize = 11.sp)
+                    Text(text = s.confirmDateTime, color = theme.textDim, fontSize = 11.sp)
                 }
             }
             Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(theme.border).padding(vertical = 12.dp))
@@ -111,7 +113,7 @@ fun ConfirmScreen(theme: CraftsmenColors, mech: Mechanic, onDone: () -> Unit) {
         Spacer(Modifier.height(28.dp))
         AppButton(
             theme = theme,
-            text = "Back to home",
+            text = s.backToHome,
             onClick = onDone,
             modifier = Modifier.widthIn(max = 320.dp),
         )

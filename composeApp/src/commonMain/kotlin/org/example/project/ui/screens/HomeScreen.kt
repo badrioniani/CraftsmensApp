@@ -41,13 +41,16 @@ import org.example.project.data.CAR_BRANDS
 import org.example.project.data.CarBrand
 import org.example.project.ui.components.BrandMark
 import org.example.project.ui.components.MonoLabel
-import org.example.project.ui.icons.IconPin
+import org.example.project.ui.i18n.LocalLanguage
+import org.example.project.ui.i18n.LocalStrings
+import org.example.project.ui.i18n.LocalToggleLanguage
 import org.example.project.ui.icons.IconSearch
 import org.example.project.ui.icons.IconX
 import org.example.project.ui.theme.CraftsmenColors
 
 @Composable
 fun HomeScreen(theme: CraftsmenColors, onPickBrand: (CarBrand) -> Unit) {
+    val s = LocalStrings.current
     var query by remember { mutableStateOf("") }
     val filtered = CAR_BRANDS.filter {
         it.name.contains(query, ignoreCase = true) || it.country.contains(query, ignoreCase = true)
@@ -67,7 +70,7 @@ fun HomeScreen(theme: CraftsmenColors, onPickBrand: (CarBrand) -> Unit) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                MonoLabel("Pick your car brand", theme)
+                MonoLabel(s.pickBrand, theme)
                 Text(
                     text = "${filtered.size}/${CAR_BRANDS.size}",
                     fontSize = 11.sp,
@@ -80,7 +83,7 @@ fun HomeScreen(theme: CraftsmenColors, onPickBrand: (CarBrand) -> Unit) {
         }
         item(span = { GridItemSpan(3) }) {
             Column(modifier = Modifier.fillMaxWidth().padding(top = 24.dp, bottom = 16.dp)) {
-                MonoLabel("Don't see your brand?", theme)
+                MonoLabel(s.dontSeeBrand, theme)
                 Spacer(Modifier.height(10.dp))
                 Box(
                     modifier = Modifier
@@ -92,7 +95,7 @@ fun HomeScreen(theme: CraftsmenColors, onPickBrand: (CarBrand) -> Unit) {
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(
-                        text = "+ Add it manually",
+                        text = s.addManually,
                         color = theme.textDim,
                         fontSize = 14.sp,
                     )
@@ -104,6 +107,9 @@ fun HomeScreen(theme: CraftsmenColors, onPickBrand: (CarBrand) -> Unit) {
 
 @Composable
 private fun HomeHeader(theme: CraftsmenColors, q: String, onQ: (String) -> Unit) {
+    val s = LocalStrings.current
+    val lang = LocalLanguage.current
+    val toggleLang = LocalToggleLanguage.current
     Column(modifier = Modifier.fillMaxWidth().padding(top = 48.dp)) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -127,39 +133,54 @@ private fun HomeHeader(theme: CraftsmenColors, q: String, onQ: (String) -> Unit)
                 }
                 Spacer(Modifier.width(8.dp))
                 Text(
-                    text = "craftsmen",
+                    text = s.appName,
                     color = theme.text,
                     fontSize = 17.sp,
                     fontWeight = FontWeight.SemiBold,
                 )
             }
+            // Language toggle pill
             Row(
                 modifier = Modifier
                     .clip(CircleShape)
+                    .background(theme.bgRaised)
                     .border(1.dp, theme.border, CircleShape)
-                    .padding(horizontal = 10.dp, vertical = 6.dp),
+                    .clickable { toggleLang() }
+                    .padding(horizontal = 12.dp, vertical = 7.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
             ) {
-                IconPin(size = 12.dp, color = theme.textDim)
                 Text(
-                    text = "EAST SIDE",
-                    color = theme.textDim,
+                    text = lang.display,
+                    color = theme.text,
                     fontSize = 11.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    letterSpacing = 0.5.sp,
+                )
+                Box(
+                    modifier = Modifier
+                        .size(width = 1.dp, height = 12.dp)
+                        .background(theme.border),
+                )
+                Text(
+                    text = if (lang.code == "en") "KA" else "EN",
+                    color = theme.textMute,
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Medium,
                     letterSpacing = 0.5.sp,
                 )
             }
         }
         Spacer(Modifier.height(22.dp))
         Text(
-            text = "Find a craftsman",
+            text = s.homeTitle1,
             color = theme.text,
             fontSize = 30.sp,
             fontWeight = FontWeight.SemiBold,
             lineHeight = 32.sp,
         )
         Text(
-            text = "that knows your car.",
+            text = s.homeTitle2,
             color = theme.textDim,
             fontSize = 30.sp,
             fontWeight = FontWeight.SemiBold,
@@ -181,7 +202,7 @@ private fun HomeHeader(theme: CraftsmenColors, q: String, onQ: (String) -> Unit)
             TextField(
                 value = q,
                 onValueChange = onQ,
-                placeholder = { Text("Search brand or model", color = theme.textDim) },
+                placeholder = { Text(s.searchPlaceholder, color = theme.textDim) },
                 modifier = Modifier.weight(1f),
                 singleLine = true,
                 colors = TextFieldDefaults.colors(
@@ -206,6 +227,7 @@ private fun HomeHeader(theme: CraftsmenColors, q: String, onQ: (String) -> Unit)
 
 @Composable
 private fun BrandTile(brand: CarBrand, theme: CraftsmenColors, onClick: () -> Unit) {
+    val s = LocalStrings.current
     Column(
         modifier = Modifier
             .clip(RoundedCornerShape(16.dp))
@@ -226,7 +248,7 @@ private fun BrandTile(brand: CarBrand, theme: CraftsmenColors, onClick: () -> Un
                 textAlign = TextAlign.Center,
             )
             Text(
-                text = brand.country.uppercase(),
+                text = s.country(brand.country).uppercase(),
                 color = theme.textMute,
                 fontSize = 9.sp,
                 letterSpacing = 0.7.sp,

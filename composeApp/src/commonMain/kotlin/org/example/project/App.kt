@@ -23,6 +23,11 @@ import org.example.project.ui.screens.ListScreen
 import org.example.project.ui.screens.MapScreen
 import org.example.project.ui.screens.ReviewsScreen
 import org.example.project.ui.screens.SpecialtyScreen
+import org.example.project.ui.i18n.AppLanguage
+import org.example.project.ui.i18n.LocalLanguage
+import org.example.project.ui.i18n.LocalStrings
+import org.example.project.ui.i18n.LocalToggleLanguage
+import org.example.project.ui.i18n.stringsFor
 import org.example.project.ui.theme.ACCENT_OPTIONS
 import org.example.project.ui.theme.LocalCraftsmenColors
 import org.example.project.ui.theme.buildTheme
@@ -35,6 +40,12 @@ fun App() {
     val layout by remember { mutableStateOf(ListLayout.List) }
     val theme = remember(dark, accent) { buildTheme(dark, accent) }
 
+    var language by remember { mutableStateOf(AppLanguage.EN) }
+    val strings = remember(language) { stringsFor(language) }
+    val toggleLanguage: () -> Unit = {
+        language = if (language == AppLanguage.EN) AppLanguage.KA else AppLanguage.EN
+    }
+
     val stack = remember { mutableStateListOf<Route>(Route.Home) }
     fun push(r: Route) { stack.add(r) }
     fun pop() { if (stack.size > 1) stack.removeAt(stack.lastIndex) }
@@ -45,7 +56,12 @@ fun App() {
     }
 
     MaterialTheme {
-        CompositionLocalProvider(LocalCraftsmenColors provides theme) {
+        CompositionLocalProvider(
+            LocalCraftsmenColors provides theme,
+            LocalStrings provides strings,
+            LocalLanguage provides language,
+            LocalToggleLanguage provides toggleLanguage,
+        ) {
             Box(modifier = Modifier.fillMaxSize().background(theme.bg)) {
                 when (val top = stack.last()) {
                     is Route.Home -> HomeScreen(

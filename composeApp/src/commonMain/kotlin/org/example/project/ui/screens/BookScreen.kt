@@ -45,6 +45,7 @@ import org.example.project.ui.components.AppButton
 import org.example.project.ui.components.ScreenHeader
 import org.example.project.ui.components.Section
 import org.example.project.ui.components.StickyBottom
+import org.example.project.ui.i18n.LocalStrings
 import org.example.project.ui.icons.SpecIcon
 import org.example.project.ui.theme.CraftsmenColors
 
@@ -59,6 +60,7 @@ fun BookScreen(
     onBack: () -> Unit,
     onConfirm: () -> Unit,
 ) {
+    val s = LocalStrings.current
     var date by remember { mutableStateOf(1) }
     var slot by remember { mutableStateOf<String?>(null) }
     var issue by remember { mutableStateOf("") }
@@ -74,7 +76,7 @@ fun BookScreen(
     val slots = listOf("08:00", "09:30", "11:00", "13:30", "15:00", "16:30")
 
     Column(modifier = Modifier.fillMaxSize().background(theme.bg)) {
-        ScreenHeader(theme, "Book a slot", mech.name.uppercase(), onBack = onBack)
+        ScreenHeader(theme, s.bookSlot, mech.name.uppercase(), onBack = onBack)
         LazyColumn(modifier = Modifier.weight(1f), contentPadding = PaddingValues(bottom = 16.dp)) {
             item {
                 Row(
@@ -96,11 +98,11 @@ fun BookScreen(
                         contentAlignment = Alignment.Center,
                     ) { SpecIcon(id = spec.id, size = 20.dp, color = theme.text) }
                     Column(modifier = Modifier.weight(1f)) {
-                        Text(spec.name, color = theme.text, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                        Text(s.specialtyName(spec.id), color = theme.text, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
                         val low = 50 + spec.id.length * 8
                         val high = 120 + spec.id.length * 12
                         Text(
-                            "EST. \$$low–\$$high · DIAGNOSTIC",
+                            "${s.estPrefix} \$$low–\$$high · ${s.diagnosticSuffix}",
                             color = theme.textDim,
                             fontSize = 11.sp,
                         )
@@ -108,7 +110,7 @@ fun BookScreen(
                 }
             }
             item {
-                Section(theme, "Pick a date") {
+                Section(theme, s.pickDate) {
                     LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         items(days) { d ->
                             val sel = date == d.d
@@ -150,7 +152,7 @@ fun BookScreen(
                 }
             }
             item {
-                Section(theme, "Pick a time") {
+                Section(theme, s.pickTime) {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         slots.chunked(3).forEach { row ->
                             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -193,13 +195,13 @@ fun BookScreen(
                 }
             }
             item {
-                Section(theme, "Describe the issue (optional)") {
+                Section(theme, s.describeIssue) {
                     TextField(
                         value = issue,
                         onValueChange = { issue = it },
                         placeholder = {
                             Text(
-                                "E.g. car shudders at idle, check engine light on for 2 days...",
+                                s.issuePlaceholder,
                                 color = theme.textDim,
                             )
                         },
@@ -224,7 +226,7 @@ fun BookScreen(
             val day = days.firstOrNull { it.d == date }
             AppButton(
                 theme = theme,
-                text = if (sel != null && day != null) "Confirm ${day.day} $sel" else "Pick a time slot",
+                text = if (sel != null && day != null) s.confirmAt(day.day, sel) else s.pickTimeSlot,
                 onClick = { if (sel != null) onConfirm() },
                 enabled = sel != null,
             )

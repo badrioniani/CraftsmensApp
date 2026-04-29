@@ -35,7 +35,6 @@ import org.example.project.data.CAR_BRANDS
 import org.example.project.data.CarBrand
 import org.example.project.data.Mechanic
 import org.example.project.data.REVIEWS
-import org.example.project.data.SPECIALTIES
 import org.example.project.data.Specialty
 import org.example.project.ui.components.AppButton
 import org.example.project.ui.components.BrandMark
@@ -43,6 +42,7 @@ import org.example.project.ui.components.IconButton40
 import org.example.project.ui.components.MonoLabel
 import org.example.project.ui.components.Section
 import org.example.project.ui.components.StickyBottom
+import org.example.project.ui.i18n.LocalStrings
 import org.example.project.ui.icons.IconBack
 import org.example.project.ui.icons.IconCalendar
 import org.example.project.ui.icons.IconChat
@@ -69,6 +69,7 @@ fun DetailScreen(
     onDirections: () -> Unit,
     onReviews: () -> Unit,
 ) {
+    val s = LocalStrings.current
     Column(modifier = Modifier.fillMaxSize().background(theme.bg)) {
         LazyColumn(
             modifier = Modifier.weight(1f).fillMaxWidth(),
@@ -78,7 +79,7 @@ fun DetailScreen(
             item { StatStrip(theme, mech) }
             item { BadgesRow(theme, mech) }
             item {
-                Section(theme, "About") {
+                Section(theme, s.about) {
                     Text(
                         text = mech.bio,
                         color = theme.textDim,
@@ -88,32 +89,32 @@ fun DetailScreen(
                 }
             }
             item {
-                Section(theme, "Specialties") {
+                Section(theme, s.specialties) {
                     SpecChips(theme, mech, currentSpec = spec)
                 }
             }
             item {
-                Section(theme, "Brands serviced") {
+                Section(theme, s.brandsServiced) {
                     BrandsRow(theme, mech)
                 }
             }
             item {
-                Section(theme, "Contact & location") {
+                Section(theme, s.contactLocation) {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         ContactRow(
-                            theme, label = "Phone", value = mech.phone, onClick = onCall,
+                            theme, label = s.contactPhone, value = mech.phone, onClick = onCall,
                             icon = { IconPhone(size = 16.dp, color = theme.text) }
                         )
                         ContactRow(
-                            theme, label = "WhatsApp", value = mech.phone, onClick = onWhatsapp,
+                            theme, label = s.contactWhatsapp, value = mech.phone, onClick = onWhatsapp,
                             icon = { IconChat(size = 16.dp, color = theme.text) }
                         )
                         ContactRow(
-                            theme, label = "Address", value = mech.address, onClick = onDirections,
+                            theme, label = s.contactAddress, value = mech.address, onClick = onDirections,
                             icon = { IconPin(size = 16.dp, color = theme.text) }
                         )
                         ContactRow(
-                            theme, label = "Hours", value = mech.hours, onClick = null,
+                            theme, label = s.contactHours, value = mech.hours, onClick = null,
                             icon = { IconClock(size = 16.dp, color = theme.text) }
                         )
                     }
@@ -122,10 +123,10 @@ fun DetailScreen(
             item {
                 Section(
                     theme = theme,
-                    title = "Recent reviews",
+                    title = s.recentReviews,
                     right = {
                         Text(
-                            text = "See all (${mech.reviews})",
+                            text = s.seeAll(mech.reviews),
                             color = theme.accent,
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Medium,
@@ -163,7 +164,7 @@ fun DetailScreen(
                 ) { IconChat(size = 20.dp, color = theme.text) }
                 AppButton(
                     theme = theme,
-                    text = "Book appointment",
+                    text = s.bookAppointment,
                     onClick = onBook,
                     modifier = Modifier.weight(1f),
                     leadingIcon = { IconCalendar(size = 18.dp, color = theme.accentText) },
@@ -255,6 +256,7 @@ private fun HeroBlock(theme: CraftsmenColors, mech: Mechanic, onBack: () -> Unit
 
 @Composable
 private fun StatStrip(theme: CraftsmenColors, mech: Mechanic) {
+    val s = LocalStrings.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -266,11 +268,11 @@ private fun StatStrip(theme: CraftsmenColors, mech: Mechanic) {
             .padding(vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        StatBlock(theme, label = "RATING", value = mech.rating.toString(), accent = true, modifier = Modifier.weight(1f))
+        StatBlock(theme, label = s.statRating, value = mech.rating.toString(), accent = true, modifier = Modifier.weight(1f))
         Box(modifier = Modifier.size(width = 1.dp, height = 30.dp).background(theme.border))
-        StatBlock(theme, label = "IN TRADE", value = "${mech.years}y", accent = false, modifier = Modifier.weight(1f))
+        StatBlock(theme, label = s.statTrade, value = "${mech.years}y", accent = false, modifier = Modifier.weight(1f))
         Box(modifier = Modifier.size(width = 1.dp, height = 30.dp).background(theme.border))
-        StatBlock(theme, label = "KILOMETERS", value = mech.distance.toString(), accent = false, modifier = Modifier.weight(1f))
+        StatBlock(theme, label = s.statKm, value = mech.distance.toString(), accent = false, modifier = Modifier.weight(1f))
     }
 }
 
@@ -336,12 +338,12 @@ private fun BadgesRow(theme: CraftsmenColors, mech: Mechanic) {
 
 @Composable
 private fun SpecChips(theme: CraftsmenColors, mech: Mechanic, currentSpec: Specialty) {
+    val s = LocalStrings.current
     androidx.compose.foundation.layout.FlowRow(
         horizontalArrangement = Arrangement.spacedBy(6.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
         mech.specialties.forEach { sid ->
-            val s = SPECIALTIES.first { it.id == sid }
             val match = sid == currentSpec.id
             Row(
                 modifier = Modifier
@@ -354,7 +356,7 @@ private fun SpecChips(theme: CraftsmenColors, mech: Mechanic, currentSpec: Speci
             ) {
                 SpecIcon(id = sid, size = 12.dp, color = if (match) theme.accent else theme.textDim)
                 Text(
-                    text = s.name,
+                    text = s.specialtyName(sid),
                     color = if (match) theme.accent else theme.text,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,

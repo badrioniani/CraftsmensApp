@@ -41,6 +41,7 @@ import org.example.project.ui.components.BrandMark
 import org.example.project.ui.components.MonoLabel
 import org.example.project.ui.components.ScreenHeader
 import org.example.project.ui.components.StickyBottom
+import org.example.project.ui.i18n.LocalStrings
 import org.example.project.ui.icons.SpecIcon
 import org.example.project.ui.theme.CraftsmenColors
 
@@ -51,13 +52,14 @@ fun SpecialtyScreen(
     onBack: () -> Unit,
     onPickSpec: (Specialty) -> Unit,
 ) {
+    val s = LocalStrings.current
     var selected by remember { mutableStateOf<String?>(null) }
 
     Column(modifier = Modifier.fillMaxSize().background(theme.bg)) {
         ScreenHeader(
             theme = theme,
-            title = "What's the issue?",
-            subtitle = "FOR YOUR ${brand.name.uppercase()}",
+            title = s.specQuestion,
+            subtitle = "${s.forYour} ${brand.name.uppercase()}",
             onBack = onBack,
         )
         LazyVerticalGrid(
@@ -73,7 +75,7 @@ fun SpecialtyScreen(
             item(span = { GridItemSpan(2) }) {
                 Row(
                     modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-                ) { MonoLabel("Pick a specialty", theme) }
+                ) { MonoLabel(s.pickSpecialty, theme) }
             }
             items(SPECIALTIES) { spec ->
                 SpecCard(
@@ -89,7 +91,7 @@ fun SpecialtyScreen(
             val sel = SPECIALTIES.firstOrNull { it.id == selected }
             AppButton(
                 theme = theme,
-                text = if (sel != null) "Find craftsmen for ${sel.name}" else "Select a specialty",
+                text = if (sel != null) s.findCraftsmenFor(s.specialtyName(sel.id)) else s.selectSpecialty,
                 onClick = { sel?.let { onPickSpec(it) } },
                 enabled = sel != null,
             )
@@ -99,6 +101,7 @@ fun SpecialtyScreen(
 
 @Composable
 private fun BrandHeaderCard(brand: CarBrand, theme: CraftsmenColors) {
+    val s = LocalStrings.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -119,13 +122,13 @@ private fun BrandHeaderCard(brand: CarBrand, theme: CraftsmenColors) {
                 fontWeight = FontWeight.SemiBold,
             )
             Text(
-                text = "EST. ${brand.founded} · ${brand.country.uppercase()}",
+                text = "${s.estPrefix} ${brand.founded} · ${s.country(brand.country).uppercase()}",
                 color = theme.textDim,
                 fontSize = 11.sp,
             )
         }
         Text(
-            text = "Change",
+            text = s.change,
             color = theme.accent,
             fontSize = 12.sp,
             fontWeight = FontWeight.Medium,
@@ -136,6 +139,7 @@ private fun BrandHeaderCard(brand: CarBrand, theme: CraftsmenColors) {
 
 @Composable
 private fun SpecCard(spec: Specialty, theme: CraftsmenColors, selected: Boolean, onClick: () -> Unit) {
+    val s = LocalStrings.current
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -166,21 +170,21 @@ private fun SpecCard(spec: Specialty, theme: CraftsmenColors, selected: Boolean,
         }
         Column {
             Text(
-                text = spec.name,
+                text = s.specialtyName(spec.id),
                 color = theme.text,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold,
             )
             Spacer(Modifier.height(3.dp))
             Text(
-                text = spec.desc,
+                text = s.specialtyDesc(spec.id),
                 color = theme.textDim,
                 fontSize = 11.sp,
                 lineHeight = 15.sp,
             )
         }
         Text(
-            text = "${spec.jobs} JOBS DONE",
+            text = "${spec.jobs} ${s.jobsDone}",
             color = theme.textMute,
             fontSize = 10.sp,
             letterSpacing = 0.5.sp,

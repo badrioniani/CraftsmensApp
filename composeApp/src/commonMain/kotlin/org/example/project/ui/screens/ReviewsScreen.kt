@@ -28,17 +28,19 @@ import org.example.project.data.REVIEWS
 import org.example.project.data.SYNTHETIC_REVIEWS
 import org.example.project.ui.components.ScreenHeader
 import org.example.project.ui.components.Stars
+import org.example.project.ui.i18n.LocalStrings
 import org.example.project.ui.theme.CraftsmenColors
 
 @Composable
 fun ReviewsScreen(theme: CraftsmenColors, mech: Mechanic, onBack: () -> Unit) {
+    val s = LocalStrings.current
     val reviews = REVIEWS.filter { it.mechId == mech.id } + SYNTHETIC_REVIEWS
 
     Column(modifier = Modifier.fillMaxSize().background(theme.bg)) {
         ScreenHeader(
             theme = theme,
-            title = "Reviews",
-            subtitle = "${mech.name.uppercase()} · ${mech.reviews} REVIEWS",
+            title = s.reviewsTitle,
+            subtitle = "${mech.name.uppercase()} · ${mech.reviews} ${s.reviewsSuffix}",
             onBack = onBack,
         )
 
@@ -59,6 +61,7 @@ fun ReviewsScreen(theme: CraftsmenColors, mech: Mechanic, onBack: () -> Unit) {
 
 @Composable
 private fun RatingSummary(theme: CraftsmenColors, mech: Mechanic) {
+    val s = LocalStrings.current
     Row(
         modifier = Modifier.fillMaxWidth().padding(vertical = 20.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -75,7 +78,7 @@ private fun RatingSummary(theme: CraftsmenColors, mech: Mechanic) {
             Stars(rating = mech.rating, size = 14.dp, theme = theme)
             Spacer(Modifier.height(6.dp))
             Text(
-                text = "${mech.reviews} REVIEWS",
+                text = "${mech.reviews} ${s.reviewsSuffix}",
                 color = theme.textMute,
                 fontSize = 11.sp,
             )

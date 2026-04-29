@@ -48,6 +48,7 @@ import org.example.project.ui.components.MonoLabel
 import org.example.project.ui.components.Pill
 import org.example.project.ui.components.PriceTag
 import org.example.project.ui.components.ScreenHeader
+import org.example.project.ui.i18n.LocalStrings
 import org.example.project.ui.icons.IconFilter
 import org.example.project.ui.icons.IconMap
 import org.example.project.ui.icons.IconShield
@@ -76,6 +77,7 @@ fun ListScreen(
     onPickMech: (Mechanic) -> Unit,
     onMap: () -> Unit,
 ) {
+    val s = LocalStrings.current
     var filters by remember { mutableStateOf(MechFilters()) }
     var sort by remember { mutableStateOf(SortMode.Distance) }
     var filterOpen by remember { mutableStateOf(false) }
@@ -105,8 +107,8 @@ fun ListScreen(
             ScreenHeader(
                 theme = theme,
                 onBack = onBack,
-                title = spec.name,
-                subtitle = "${brand.name.uppercase()} · ${sorted.size} CRAFTSMEN",
+                title = s.specialtyName(spec.id),
+                subtitle = "${brand.name.uppercase()} · ${sorted.size} ${s.craftsmenSuffix}",
                 right = {
                     IconButton40(theme = theme, onClick = onMap) {
                         IconMap(size = 18.dp, color = theme.text)
@@ -134,7 +136,7 @@ fun ListScreen(
                         horizontalArrangement = Arrangement.spacedBy(6.dp),
                     ) {
                         IconFilter(size = 13.dp, color = theme.text)
-                        Text("Filters", color = theme.text, fontSize = 12.sp, fontWeight = FontWeight.Medium)
+                        Text(s.filters, color = theme.text, fontSize = 12.sp, fontWeight = FontWeight.Medium)
                         if (filters.minRating > 0 || filters.minYears > 0 || filters.availableNow || filters.maxPrice < 4) {
                             Box(
                                 modifier = Modifier.size(6.dp).clip(CircleShape).background(theme.accent)
@@ -146,9 +148,9 @@ fun ListScreen(
                     Pill(
                         theme = theme,
                         text = when (mode) {
-                            SortMode.Distance -> "Nearest"
-                            SortMode.Rating -> "Top rated"
-                            SortMode.Experience -> "Most experience"
+                            SortMode.Distance -> s.sortNearest
+                            SortMode.Rating -> s.sortRating
+                            SortMode.Experience -> s.sortExperience
                         },
                         active = sort == mode,
                         onClick = { sort = mode },
@@ -170,7 +172,7 @@ fun ListScreen(
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         Text("!", color = theme.accent, fontWeight = FontWeight.Bold)
                         Text(
-                            "No ${brand.name} specialists for ${spec.name.lowercase()} nearby. Showing other ${spec.name.lowercase()} craftsmen.",
+                            s.fallbackNoBrand(brand.name, s.specialtyName(spec.id)),
                             color = theme.text,
                             fontSize = 12.sp,
                         )
@@ -183,10 +185,10 @@ fun ListScreen(
                     modifier = Modifier.fillMaxWidth().padding(vertical = 40.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Text("No craftsmen match your filters.", color = theme.textDim, fontSize = 14.sp)
+                    Text(s.noMatch, color = theme.textDim, fontSize = 14.sp)
                     Spacer(Modifier.height(12.dp))
                     Text(
-                        "Reset filters",
+                        s.resetFilters,
                         color = theme.accent,
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Medium,
@@ -227,6 +229,7 @@ fun ListScreen(
 
 @Composable
 private fun MechListCard(mech: Mechanic, theme: CraftsmenColors, onClick: () -> Unit) {
+    val s = LocalStrings.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -284,7 +287,7 @@ private fun MechListCard(mech: Mechanic, theme: CraftsmenColors, onClick: () -> 
                     Text(mech.rating.toString(), color = theme.text, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
                     Text("(${mech.reviews})", color = theme.textMute, fontSize = 11.sp)
                 }
-                Text("${mech.years}y exp", color = theme.textDim, fontSize = 11.sp)
+                Text("${mech.years}${s.expSuffix}", color = theme.textDim, fontSize = 11.sp)
                 PriceTag(price = mech.price, theme = theme)
             }
         }
@@ -298,8 +301,8 @@ private fun MechListCard(mech: Mechanic, theme: CraftsmenColors, onClick: () -> 
                 )
                 Text(text = " km", color = theme.textDim, fontSize = 10.sp)
             }
-            if (mech.available) MonoLabel("Open now", theme, color = theme.success)
-            else MonoLabel("Closed", theme, color = theme.textMute)
+            if (mech.available) MonoLabel(s.openNow, theme, color = theme.success)
+            else MonoLabel(s.closed, theme, color = theme.textMute)
         }
     }
 }
@@ -373,6 +376,7 @@ private fun FilterSheet(
     onApply: (MechFilters) -> Unit,
     onClose: () -> Unit,
 ) {
+    val s = LocalStrings.current
     var local by remember { mutableStateOf(filters) }
     Box(
         modifier = Modifier
@@ -402,18 +406,18 @@ private fun FilterSheet(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                Text("Filters", color = theme.text, fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
+                Text(s.filters, color = theme.text, fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
                 Box(modifier = Modifier.clickable { onClose() }.padding(4.dp)) {
                     IconX(size = 20.dp, color = theme.textDim)
                 }
             }
 
-            FilterRow(theme, "Minimum rating") {
+            FilterRow(theme, s.minRating) {
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     listOf(0.0, 4.0, 4.5, 4.8).forEach { r ->
                         Pill(
                             theme = theme,
-                            text = if (r == 0.0) "Any" else "$r+",
+                            text = if (r == 0.0) s.any else "$r+",
                             active = local.minRating == r,
                             onClick = { local = local.copy(minRating = r) },
                             small = true,
@@ -421,12 +425,12 @@ private fun FilterSheet(
                     }
                 }
             }
-            FilterRow(theme, "Years of experience") {
+            FilterRow(theme, s.yearsExp) {
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     listOf(0, 5, 10, 20).forEach { y ->
                         Pill(
                             theme = theme,
-                            text = if (y == 0) "Any" else "$y+ yrs",
+                            text = if (y == 0) s.any else s.yrsLabel(y),
                             active = local.minYears == y,
                             onClick = { local = local.copy(minYears = y) },
                             small = true,
@@ -434,13 +438,12 @@ private fun FilterSheet(
                     }
                 }
             }
-            FilterRow(theme, "Max distance: ${local.maxDistance.toInt()} km") {
-                // Simple stepper buttons since no slider in commonMain default
+            FilterRow(theme, s.maxDistanceLabel(local.maxDistance.toInt())) {
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     listOf(2.0, 5.0, 10.0).forEach { d ->
                         Pill(
                             theme = theme,
-                            text = "$d km",
+                            text = "${d.toInt()} km",
                             active = local.maxDistance == d,
                             onClick = { local = local.copy(maxDistance = d) },
                             small = true,
@@ -448,7 +451,7 @@ private fun FilterSheet(
                     }
                 }
             }
-            FilterRow(theme, "Max price") {
+            FilterRow(theme, s.maxPrice) {
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     (1..4).forEach { p ->
                         Pill(
@@ -461,7 +464,7 @@ private fun FilterSheet(
                     }
                 }
             }
-            FilterRow(theme, "Available today") {
+            FilterRow(theme, s.availableToday) {
                 ToggleSwitch(
                     on = local.availableNow,
                     accent = theme.accent,
@@ -473,14 +476,14 @@ private fun FilterSheet(
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 AppButton(
                     theme = theme,
-                    text = "Reset",
+                    text = s.reset,
                     onClick = { local = MechFilters() },
                     variant = ButtonVariant.Secondary,
                     modifier = Modifier.weight(1f),
                 )
                 AppButton(
                     theme = theme,
-                    text = "Apply filters",
+                    text = s.applyFilters,
                     onClick = { onApply(local) },
                     modifier = Modifier.weight(1f),
                 )
