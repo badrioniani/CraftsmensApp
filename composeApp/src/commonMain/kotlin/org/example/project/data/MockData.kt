@@ -51,16 +51,132 @@ data class Review(
 )
 
 val CAR_BRANDS = listOf(
-    CarBrand("norvik", "Norvik", "Sweden", 1947, Color(0xFFC87F3A)),
-    CarBrand("tessera", "Tessera", "Italy", 1962, Color(0xFF9B3838)),
-    CarBrand("hauler", "Hauler", "USA", 1923, Color(0xFF3A4A5C)),
-    CarBrand("kazuya", "Kazuya", "Japan", 1958, Color(0xFF6B8C5A)),
-    CarBrand("glanz", "Glanz", "Germany", 1929, Color(0xFF2A2A2A)),
-    CarBrand("astre", "Astré", "France", 1971, Color(0xFF5A4A7A)),
-    CarBrand("briton", "Briton", "UK", 1934, Color(0xFF4A5A6A)),
-    CarBrand("volcar", "Volcar", "Korea", 1985, Color(0xFF7A4A3A)),
-    CarBrand("mirador", "Mirador", "Spain", 1968, Color(0xFFA86A3A)),
-    CarBrand("orbit", "Orbit EV", "USA", 2014, Color(0xFF3A7A8A)),
+    // Germany
+    CarBrand("bmw",           "BMW",            "Germany",       1916, Color(0xFF0066B1)),
+    CarBrand("mercedesbenz",  "Mercedes-Benz",  "Germany",       1926, Color(0xFF000000)),
+    CarBrand("audi",          "Audi",           "Germany",       1909, Color(0xFFBB0A30)),
+    CarBrand("porsche",       "Porsche",        "Germany",       1931, Color(0xFFD5001C)),
+    CarBrand("volkswagen",    "Volkswagen",     "Germany",       1937, Color(0xFF001E50)),
+    CarBrand("opel",          "Opel",           "Germany",       1899, Color(0xFFF7FF00)),
+    CarBrand("smart",         "Smart",          "Germany",       1994, Color(0xFF78BE20)),
+    CarBrand("maybach",       "Maybach",        "Germany",       1909, Color(0xFF1A1A1A)),
+
+    // Italy
+    CarBrand("ferrari",       "Ferrari",        "Italy",         1939, Color(0xFFFF2800)),
+    CarBrand("lamborghini",   "Lamborghini",    "Italy",         1963, Color(0xFFE4A024)),
+    CarBrand("maserati",      "Maserati",       "Italy",         1914, Color(0xFF003B6F)),
+    CarBrand("alfaromeo",     "Alfa Romeo",     "Italy",         1910, Color(0xFFB30000)),
+    CarBrand("fiat",          "Fiat",           "Italy",         1899, Color(0xFFB22222)),
+    CarBrand("lancia",        "Lancia",         "Italy",         1906, Color(0xFF003D7A)),
+    CarBrand("pagani",        "Pagani",         "Italy",         1992, Color(0xFF1A1A1A)),
+    CarBrand("abarth",        "Abarth",         "Italy",         1949, Color(0xFFC8102E)),
+
+    // France
+    CarBrand("peugeot",       "Peugeot",        "France",        1889, Color(0xFF1B2A4A)),
+    CarBrand("renault",       "Renault",        "France",        1899, Color(0xFFFFCC33)),
+    CarBrand("citroen",       "Citroën",        "France",        1919, Color(0xFFC8102E)),
+    CarBrand("bugatti",       "Bugatti",        "France",        1909, Color(0xFF003DA5)),
+    CarBrand("ds",            "DS Automobiles", "France",        2014, Color(0xFFB8860B)),
+    CarBrand("alpine",        "Alpine",         "France",        1955, Color(0xFF0046A0)),
+
+    // United Kingdom
+    CarBrand("astonmartin",   "Aston Martin",   "UK",            1913, Color(0xFF00665E)),
+    CarBrand("jaguar",        "Jaguar",         "UK",            1922, Color(0xFF1A3A1A)),
+    CarBrand("bentley",       "Bentley",        "UK",            1919, Color(0xFF003822)),
+    CarBrand("rollsroyce",    "Rolls-Royce",    "UK",            1904, Color(0xFF68228B)),
+    CarBrand("mini",          "Mini",           "UK",            1959, Color(0xFFE60012)),
+    CarBrand("landrover",     "Land Rover",     "UK",            1948, Color(0xFF005A30)),
+    CarBrand("lotus",         "Lotus",          "UK",            1952, Color(0xFFFFB81C)),
+    CarBrand("mclaren",       "McLaren",        "UK",            1985, Color(0xFFFF8000)),
+    CarBrand("mg",            "MG",             "UK",            1924, Color(0xFFC8102E)),
+    CarBrand("morgan",        "Morgan",         "UK",            1910, Color(0xFF004225)),
+
+    // USA
+    CarBrand("ford",          "Ford",           "USA",           1903, Color(0xFF003478)),
+    CarBrand("chevrolet",     "Chevrolet",      "USA",           1911, Color(0xFFCB9D38)),
+    CarBrand("cadillac",      "Cadillac",       "USA",           1902, Color(0xFF941E32)),
+    CarBrand("chrysler",      "Chrysler",       "USA",           1925, Color(0xFF1A1A1A)),
+    CarBrand("dodge",         "Dodge",          "USA",           1900, Color(0xFFCC0000)),
+    CarBrand("jeep",          "Jeep",           "USA",           1941, Color(0xFF3B5526)),
+    CarBrand("gmc",           "GMC",            "USA",           1911, Color(0xFFCC0000)),
+    CarBrand("buick",         "Buick",          "USA",           1903, Color(0xFFC8102E)),
+    CarBrand("lincoln",       "Lincoln",        "USA",           1917, Color(0xFF1A1A1A)),
+    CarBrand("ram",           "Ram",            "USA",           2010, Color(0xFF1A1A1A)),
+    CarBrand("tesla",         "Tesla",          "USA",           2003, Color(0xFFCC0000)),
+    CarBrand("rivian",        "Rivian",         "USA",           2009, Color(0xFF005A8E)),
+    CarBrand("lucid",         "Lucid",          "USA",           2007, Color(0xFF1F2A44)),
+    CarBrand("hummer",        "Hummer",         "USA",           1992, Color(0xFF1A1A1A)),
+
+    // Japan
+    CarBrand("toyota",        "Toyota",         "Japan",         1937, Color(0xFFEB0A1E)),
+    CarBrand("honda",          "Honda",         "Japan",         1948, Color(0xFFCC0000)),
+    CarBrand("nissan",        "Nissan",         "Japan",         1933, Color(0xFFC3002F)),
+    CarBrand("mazda",         "Mazda",          "Japan",         1920, Color(0xFF101010)),
+    CarBrand("subaru",        "Subaru",         "Japan",         1953, Color(0xFF002663)),
+    CarBrand("suzuki",        "Suzuki",         "Japan",         1955, Color(0xFFCC0000)),
+    CarBrand("mitsubishi",    "Mitsubishi",     "Japan",         1917, Color(0xFFE60012)),
+    CarBrand("lexus",         "Lexus",          "Japan",         1989, Color(0xFF1A1A1A)),
+    CarBrand("infiniti",      "Infiniti",       "Japan",         1989, Color(0xFF1A1A1A)),
+    CarBrand("acura",         "Acura",          "Japan",         1986, Color(0xFF1A1A1A)),
+    CarBrand("daihatsu",      "Daihatsu",       "Japan",         1907, Color(0xFFE60012)),
+    CarBrand("isuzu",         "Isuzu",          "Japan",         1916, Color(0xFFC8102E)),
+
+    // South Korea
+    CarBrand("hyundai",       "Hyundai",        "South Korea",   1967, Color(0xFF002C5F)),
+    CarBrand("kia",           "Kia",            "South Korea",   1944, Color(0xFF05141F)),
+    CarBrand("genesis",       "Genesis",        "South Korea",   2015, Color(0xFF1A1A1A)),
+    CarBrand("kgmobility",    "KG Mobility",    "South Korea",   1954, Color(0xFFC8102E)),
+
+    // China
+    CarBrand("byd",           "BYD",            "China",         2003, Color(0xFFD80000)),
+    CarBrand("geely",         "Geely",          "China",         1986, Color(0xFF002F6C)),
+    CarBrand("chery",         "Chery",          "China",         1997, Color(0xFFC8102E)),
+    CarBrand("greatwall",     "Great Wall",     "China",         1984, Color(0xFFC8102E)),
+    CarBrand("nio",           "NIO",            "China",         2014, Color(0xFF00BFA5)),
+    CarBrand("xpeng",         "XPeng",          "China",         2014, Color(0xFF00B0F0)),
+    CarBrand("liauto",        "Li Auto",        "China",         2015, Color(0xFF1A1A1A)),
+    CarBrand("haval",         "Haval",          "China",         2013, Color(0xFFC8102E)),
+    CarBrand("lynkco",        "Lynk & Co",      "China",         2016, Color(0xFF1A1A1A)),
+    CarBrand("hongqi",        "Hongqi",         "China",         1958, Color(0xFFB22222)),
+    CarBrand("zeekr",         "Zeekr",          "China",         2021, Color(0xFF1A1A1A)),
+
+    // Sweden
+    CarBrand("volvo",         "Volvo",          "Sweden",        1927, Color(0xFF1C3F94)),
+    CarBrand("koenigsegg",    "Koenigsegg",     "Sweden",        1994, Color(0xFF101010)),
+    CarBrand("polestar",      "Polestar",       "Sweden",        2017, Color(0xFFC0C0C0)),
+
+    // Czech Republic
+    CarBrand("skoda",         "Škoda",          "Czech Republic", 1895, Color(0xFF4BA82E)),
+
+    // Romania
+    CarBrand("dacia",         "Dacia",          "Romania",       1966, Color(0xFF646B52)),
+
+    // Spain
+    CarBrand("seat",          "SEAT",           "Spain",         1950, Color(0xFFC8102E)),
+    CarBrand("cupra",         "Cupra",          "Spain",         2018, Color(0xFFB87333)),
+
+    // Russia
+    CarBrand("lada",          "Lada",           "Russia",        1966, Color(0xFF003F87)),
+    CarBrand("uaz",           "UAZ",            "Russia",        1941, Color(0xFF4B5320)),
+    CarBrand("gaz",           "GAZ",            "Russia",        1932, Color(0xFF003F87)),
+
+    // India
+    CarBrand("tata",          "Tata Motors",    "India",         1991, Color(0xFF002F6C)),
+    CarBrand("mahindra",      "Mahindra",       "India",         1945, Color(0xFFC8102E)),
+
+    // Malaysia
+    CarBrand("proton",        "Proton",         "Malaysia",      1983, Color(0xFFC8102E)),
+    CarBrand("perodua",       "Perodua",        "Malaysia",      1993, Color(0xFFC8102E)),
+
+    // Croatia
+    CarBrand("rimac",         "Rimac",          "Croatia",       2009, Color(0xFFC8102E)),
+
+    // Netherlands
+    CarBrand("donkervoort",   "Donkervoort",    "Netherlands",   1978, Color(0xFFFF6600)),
+    CarBrand("spyker",        "Spyker",         "Netherlands",   2000, Color(0xFFC0C0C0)),
+
+    // Vietnam
+    CarBrand("vinfast",       "VinFast",        "Vietnam",       2017, Color(0xFF00A4E4)),
 )
 
 val SPECIALTIES = listOf(
@@ -80,17 +196,17 @@ val SPECIALTIES = listOf(
 
 val MECHANICS = listOf(
     Mechanic(
-        id = "m1", name = "Marcus Holloway", shop = "Holloway Auto Works",
-        rating = 4.9, reviews = 247, years = 18, distance = 1.2, price = 3,
+        id = "m1", name = "Lasha Gafrindashvili", shop = "Rati's Garage",
+        rating = 5.0, reviews = 956, years = 24, distance = 1.2, price = 3,
         available = true, verified = true,
         specialties = listOf("engine", "gearbox", "diagnostic"),
         brands = listOf("norvik", "glanz", "briton", "kazuya"),
-        phone = "+1 (555) 213-4480", whatsapp = "+15552134480",
-        address = "418 Foundry St, Eastside",
+        phone = "+995 (557) 41-96-45", whatsapp = "+995557419645",
+        address = "Tbilisi Feiqrebi",
         hours = "Mon–Sat · 7:00 AM – 6:00 PM",
         bio = "Third-generation mechanic. ASE Master certified. Specializes in European engine rebuilds and dual-clutch transmissions. If it has pistons, I can fix it.",
         photo = Color(0xFFC87F3A), initials = "MH",
-        badges = listOf("ASE Master", "European specialist", "18 yrs"),
+        badges = listOf("ASE Master", "European specialist", "24 yrs"),
     ),
     Mechanic(
         id = "m2", name = "Priya Subramanian", shop = "Subra Garage",
@@ -108,7 +224,7 @@ val MECHANICS = listOf(
     Mechanic(
         id = "m3", name = "Diego Romero", shop = "Romero & Sons",
         rating = 4.7, reviews = 412, years = 25, distance = 3.1, price = 2,
-        available = false, verified = true,
+        available = true, verified = true,
         specialties = listOf("engine", "exhaust", "brakes", "suspension"),
         brands = listOf("hauler", "norvik", "mirador", "tessera"),
         phone = "+1 (555) 884-0091", whatsapp = "+15558840091",

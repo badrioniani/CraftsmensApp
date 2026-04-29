@@ -373,7 +373,7 @@ private fun BrandsRow(theme: CraftsmenColors, mech: Mechanic) {
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         mech.brands.forEach { bid ->
-            val b = CAR_BRANDS.first { it.id == bid }
+            val b = CAR_BRANDS.firstOrNull { it.id == bid } ?: return@forEach
             Row(
                 modifier = Modifier
                     .clip(RoundedCornerShape(10.dp))

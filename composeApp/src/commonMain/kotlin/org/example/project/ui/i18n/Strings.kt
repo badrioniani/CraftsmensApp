@@ -92,6 +92,8 @@ interface Strings {
     val confirmDateTime: String
     val backToHome: String
 
+    val done: String
+
     // Specialty names
     fun specialtyName(id: String): String
     fun specialtyDesc(id: String): String
@@ -177,6 +179,8 @@ object EnglishStrings : Strings {
         "$name will see you Wednesday at 11:00 AM. We sent a confirmation to your phone."
     override val confirmDateTime = "WED 29 APR · 11:00 AM"
     override val backToHome = "Back to home"
+    override val done = "Done"
+
 
     override fun specialtyName(id: String) = when (id) {
         "engine" -> "Engine"
@@ -255,6 +259,7 @@ object GeorgianStrings : Strings {
     override val applyFilters = "გამოყენება"
     override val any = "ნებისმიერი"
     override fun yrsLabel(n: Int) = "$n+ წელი"
+    override val done = "მზადაა"
 
     override val about = "შესახებ"
     override val specialties = "სპეციალობები"
@@ -345,3 +350,6 @@ fun stringsFor(lang: AppLanguage): Strings = when (lang) {
 val LocalStrings = staticCompositionLocalOf<Strings> { EnglishStrings }
 val LocalLanguage = staticCompositionLocalOf { AppLanguage.EN }
 val LocalToggleLanguage = staticCompositionLocalOf<() -> Unit> { {} }
+
+
+val LocalSetInputFocused = staticCompositionLocalOf<(Boolean) -> Unit> { {} }

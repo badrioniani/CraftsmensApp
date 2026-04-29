@@ -21,10 +21,15 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,7 +46,9 @@ import org.example.project.data.CAR_BRANDS
 import org.example.project.data.CarBrand
 import org.example.project.ui.components.BrandMark
 import org.example.project.ui.components.MonoLabel
+import androidx.compose.ui.focus.onFocusChanged
 import org.example.project.ui.i18n.LocalLanguage
+import org.example.project.ui.i18n.LocalSetInputFocused
 import org.example.project.ui.i18n.LocalStrings
 import org.example.project.ui.i18n.LocalToggleLanguage
 import org.example.project.ui.icons.IconSearch
@@ -110,6 +117,9 @@ private fun HomeHeader(theme: CraftsmenColors, q: String, onQ: (String) -> Unit)
     val s = LocalStrings.current
     val lang = LocalLanguage.current
     val toggleLang = LocalToggleLanguage.current
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val setInputFocused = LocalSetInputFocused.current
     Column(modifier = Modifier.fillMaxWidth().padding(top = 48.dp)) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -203,8 +213,15 @@ private fun HomeHeader(theme: CraftsmenColors, q: String, onQ: (String) -> Unit)
                 value = q,
                 onValueChange = onQ,
                 placeholder = { Text(s.searchPlaceholder, color = theme.textDim) },
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f)
+                    .onFocusChanged { setInputFocused(it.isFocused) },
                 singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                keyboardActions = KeyboardActions(onSearch = {
+                    focusManager.clearFocus()
+                    keyboardController?.hide()
+                }),
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent,
@@ -243,7 +260,8 @@ private fun BrandTile(brand: CarBrand, theme: CraftsmenColors, onClick: () -> Un
             Text(
                 text = brand.name,
                 color = theme.text,
-                fontSize = 13.sp,
+                fontSize = 10.sp,
+                maxLines = 1,
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center,
             )

@@ -22,10 +22,15 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,6 +50,8 @@ import org.example.project.ui.components.AppButton
 import org.example.project.ui.components.ScreenHeader
 import org.example.project.ui.components.Section
 import org.example.project.ui.components.StickyBottom
+import androidx.compose.ui.focus.onFocusChanged
+import org.example.project.ui.i18n.LocalSetInputFocused
 import org.example.project.ui.i18n.LocalStrings
 import org.example.project.ui.icons.SpecIcon
 import org.example.project.ui.theme.CraftsmenColors
@@ -61,6 +68,9 @@ fun BookScreen(
     onConfirm: () -> Unit,
 ) {
     val s = LocalStrings.current
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val setInputFocused = LocalSetInputFocused.current
     var date by remember { mutableStateOf(1) }
     var slot by remember { mutableStateOf<String?>(null) }
     var issue by remember { mutableStateOf("") }
@@ -205,7 +215,15 @@ fun BookScreen(
                                 color = theme.textDim,
                             )
                         },
-                        modifier = Modifier.fillMaxWidth().heightIn(min = 100.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(min = 100.dp)
+                            .onFocusChanged { setInputFocused(it.isFocused) },
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                        keyboardActions = KeyboardActions(onDone = {
+                            focusManager.clearFocus()
+                            keyboardController?.hide()
+                        }),
                         colors = TextFieldDefaults.colors(
                             focusedContainerColor = theme.bgInput,
                             unfocusedContainerColor = theme.bgInput,
