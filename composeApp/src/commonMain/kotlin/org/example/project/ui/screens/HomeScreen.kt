@@ -38,13 +38,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import org.example.project.data.CAR_BRANDS
 import org.example.project.data.CarBrand
-import org.example.project.ui.components.BrandMark
 import org.example.project.ui.components.MonoLabel
 import androidx.compose.ui.focus.onFocusChanged
 import org.example.project.ui.i18n.LocalLanguage
@@ -255,7 +256,21 @@ private fun BrandTile(brand: CarBrand, theme: CraftsmenColors, onClick: () -> Un
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        BrandMark(brand = brand, size = 48.dp, dark = theme.isDark)
+        Box(
+            modifier = Modifier
+                .size(56.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .background(if (theme.isDark) Color(0xFF222222) else Color.White)
+                .border(1.5.dp, brand.color, RoundedCornerShape(12.dp)),
+            contentAlignment = Alignment.Center,
+        ) {
+            AsyncImage(
+                model = brand.carImage,
+                contentDescription = brand.name,
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.size(40.dp),
+            )
+        }
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
                 text = brand.name,

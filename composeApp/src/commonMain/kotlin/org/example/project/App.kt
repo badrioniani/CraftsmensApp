@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -54,7 +55,7 @@ import org.example.project.ui.theme.buildTheme
 @Preview
 fun App() {
     val accent = remember { ACCENT_OPTIONS.first().color }
-    val dark by remember { mutableStateOf(true) }
+    val dark = isSystemInDarkTheme()
     val layout by remember { mutableStateOf(ListLayout.List) }
     val theme = remember(dark, accent) { buildTheme(dark, accent) }
 
