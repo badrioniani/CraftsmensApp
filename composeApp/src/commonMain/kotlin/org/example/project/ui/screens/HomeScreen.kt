@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import org.example.project.data.CAR_BRANDS
 import org.example.project.data.CarBrand
+import org.example.project.ui.components.AppLogo
 import org.example.project.ui.components.MonoLabel
 import androidx.compose.ui.focus.onFocusChanged
 import org.example.project.ui.i18n.LocalLanguage
@@ -128,20 +129,7 @@ private fun HomeHeader(theme: CraftsmenColors, q: String, onQ: (String) -> Unit)
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    modifier = Modifier
-                        .size(32.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(theme.accent),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = "c",
-                        color = theme.accentText,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                    )
-                }
+                AppLogo(theme = theme, size = 32.dp)
                 Spacer(Modifier.width(8.dp))
                 Text(
                     text = s.appName,
@@ -289,3 +277,9 @@ private fun BrandTile(brand: CarBrand, theme: CraftsmenColors, onClick: () -> Un
         }
     }
 }
+
+
+
+
+
+

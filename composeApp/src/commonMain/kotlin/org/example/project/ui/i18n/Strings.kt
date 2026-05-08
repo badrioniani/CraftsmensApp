@@ -9,7 +9,70 @@ enum class AppLanguage(val code: String, val display: String) {
 
 interface Strings {
     val appName: String
+    val brandTagline: String
     val location: String
+
+    // Splash
+    val splashTagline: String
+
+    // Login
+    val loginTitle: String
+    val loginSubtitle: String
+    val emailLabel: String
+    val emailPlaceholder: String
+    val passwordLabel: String
+    val passwordPlaceholder: String
+    val forgotPassword: String
+    val loginAction: String
+
+    // Forgot / reset password
+    val forgotTitle: String
+    val forgotSubtitle: String
+    val forgotSendCodeAction: String
+    val resetTitle: String
+    val resetSubtitle: String
+    val resetCodeLabel: String
+    val resetCodePlaceholder: String
+    val resetNewPasswordLabel: String
+    val resetNewPasswordPlaceholder: String
+    val resetConfirmAction: String
+    val resetDemoNote: String
+    val noAccountQuestion: String
+    val registerCta: String
+    val orDivider: String
+
+    // Register picker
+    val registerPickerTitle: String
+    val registerPickerSubtitle: String
+    val roleUserTitle: String
+    val roleUserSubtitle: String
+    val roleMechanicTitle: String
+    val roleMechanicSubtitle: String
+
+    // Register form
+    val registerUserTitle: String
+    val registerMechanicTitle: String
+    val registerUserSubtitle: String
+    val registerMechanicSubtitle: String
+    val fullNameLabel: String
+    val fullNamePlaceholder: String
+    val phoneLabel: String
+    val phonePlaceholder: String
+    val confirmPasswordLabel: String
+    val confirmPasswordPlaceholder: String
+    val workshopNameLabel: String
+    val workshopNamePlaceholder: String
+    val specialtyLabel: String
+    val specialtyPlaceholder: String
+    val experienceLabel: String
+    val experiencePlaceholder: String
+    val cityLabel: String
+    val cityPlaceholder: String
+    val agreeTermsPrefix: String
+    val agreeTermsLink: String
+    val createAccountAction: String
+    val haveAccountQuestion: String
+    val loginCta: String
 
     // Home
     val homeTitle1: String
@@ -94,6 +157,41 @@ interface Strings {
 
     val done: String
 
+    // Bottom nav
+    val tabHome: String
+    val tabShop: String
+    val tabSettings: String
+
+    // Settings
+    val settingsTitle: String
+    val settingsAccountSection: String
+    val settingsRoleLabel: String
+    val settingsLogoutAction: String
+    val settingsLogoutConfirmTitle: String
+    val settingsLogoutConfirmMessage: String
+    val settingsCancel: String
+    fun settingsRole(role: String): String
+
+    // Shop
+    val shopTitle1: String
+    val shopTitle2: String
+    val shopSearchPlaceholder: String
+    val partsCategoryAll: String
+    val noPartsMatch: String
+    val resetSearch: String
+    val partsCount: String
+    val outOfStock: String
+    val inStockLabel: String
+    fun fitsLabel(brand: String): String
+    val fitsAnyLabel: String
+    fun conditionLabel(condition: String): String
+    val sellerSection: String
+    val partAboutSection: String
+    val callSeller: String
+    val whatsappSeller: String
+    val chatSeller: String
+    fun ratingShort(rating: Double): String
+
     // Specialty names
     fun specialtyName(id: String): String
     fun specialtyDesc(id: String): String
@@ -103,8 +201,66 @@ interface Strings {
 }
 
 object EnglishStrings : Strings {
-    override val appName = "craftsmen"
+    override val appName = "AutoFix"
+    override val brandTagline = "Mechanics that match your ride"
     override val location = "EAST SIDE"
+
+    override val splashTagline = "Mechanics that match your ride"
+
+    override val loginTitle = "Welcome back"
+    override val loginSubtitle = "Sign in to continue"
+    override val emailLabel = "Email"
+    override val emailPlaceholder = "you@example.com"
+    override val passwordLabel = "Password"
+    override val passwordPlaceholder = "Enter your password"
+    override val forgotPassword = "Forgot password?"
+    override val loginAction = "Sign in"
+
+    override val forgotTitle = "Reset password"
+    override val forgotSubtitle = "Enter your email and we'll send a code to reset your password."
+    override val forgotSendCodeAction = "Send code"
+    override val resetTitle = "Enter your code"
+    override val resetSubtitle = "Type the 6-digit code and pick a new password."
+    override val resetCodeLabel = "Reset code"
+    override val resetCodePlaceholder = "123456"
+    override val resetNewPasswordLabel = "New password"
+    override val resetNewPasswordPlaceholder = "At least 8 characters"
+    override val resetConfirmAction = "Reset password"
+    override val resetDemoNote = "Demo mode: code prefilled from server."
+    override val noAccountQuestion = "Don't have an account?"
+    override val registerCta = "Create account"
+    override val orDivider = "OR"
+
+    override val registerPickerTitle = "Join AutoFix"
+    override val registerPickerSubtitle = "Pick the account type that fits you"
+    override val roleUserTitle = "I'm a car owner"
+    override val roleUserSubtitle = "Find trusted mechanics for your car"
+    override val roleMechanicTitle = "I'm a mechanic"
+    override val roleMechanicSubtitle = "Get jobs and grow your workshop"
+
+    override val registerUserTitle = "Create user account"
+    override val registerMechanicTitle = "Create mechanic account"
+    override val registerUserSubtitle = "Tell us a bit about yourself"
+    override val registerMechanicSubtitle = "Set up your workshop profile"
+    override val fullNameLabel = "Full name"
+    override val fullNamePlaceholder = "Your name"
+    override val phoneLabel = "Phone"
+    override val phonePlaceholder = "+995 5XX XXX XXX"
+    override val confirmPasswordLabel = "Confirm password"
+    override val confirmPasswordPlaceholder = "Re-enter your password"
+    override val workshopNameLabel = "Workshop name"
+    override val workshopNamePlaceholder = "E.g. East Side Auto"
+    override val specialtyLabel = "Main specialty"
+    override val specialtyPlaceholder = "E.g. Engine, Brakes, EV"
+    override val experienceLabel = "Years of experience"
+    override val experiencePlaceholder = "5"
+    override val cityLabel = "City"
+    override val cityPlaceholder = "E.g. Tbilisi"
+    override val agreeTermsPrefix = "I agree to the"
+    override val agreeTermsLink = "Terms & Privacy"
+    override val createAccountAction = "Create account"
+    override val haveAccountQuestion = "Already have an account?"
+    override val loginCta = "Sign in"
 
     override val homeTitle1 = "Find a craftsman"
     override val homeTitle2 = "that knows your car."
@@ -181,6 +337,48 @@ object EnglishStrings : Strings {
     override val backToHome = "Back to home"
     override val done = "Done"
 
+    override val tabHome = "Home"
+    override val tabShop = "Shop"
+    override val tabSettings = "Settings"
+
+    override val settingsTitle = "Settings"
+    override val settingsAccountSection = "Account"
+    override val settingsRoleLabel = "Role"
+    override val settingsLogoutAction = "Sign out"
+    override val settingsLogoutConfirmTitle = "Sign out?"
+    override val settingsLogoutConfirmMessage = "You'll need to sign in again to use the app."
+    override val settingsCancel = "Cancel"
+    override fun settingsRole(role: String) = when (role) {
+        "user" -> "Customer"
+        "mechanic" -> "Mechanic"
+        "admin" -> "Admin"
+        else -> role.replaceFirstChar { it.uppercase() }
+    }
+
+    override val shopTitle1 = "Find parts"
+    override val shopTitle2 = "and connect with sellers."
+    override val shopSearchPlaceholder = "Search parts, brand, or seller"
+    override val partsCategoryAll = "All"
+    override val noPartsMatch = "No parts match your search."
+    override val resetSearch = "Clear search"
+    override val partsCount = "PARTS"
+    override val outOfStock = "Out of stock"
+    override val inStockLabel = "In stock"
+    override fun fitsLabel(brand: String) = "Fits $brand"
+    override val fitsAnyLabel = "Universal fit"
+    override fun conditionLabel(condition: String) = when (condition) {
+        "New" -> "New"
+        "Used" -> "Used"
+        "Refurbished" -> "Refurbished"
+        else -> condition
+    }
+    override val sellerSection = "Seller"
+    override val partAboutSection = "About this part"
+    override val callSeller = "Call"
+    override val whatsappSeller = "WhatsApp"
+    override val chatSeller = "Message"
+    override fun ratingShort(rating: Double) = rating.toString()
+
 
     override fun specialtyName(id: String) = when (id) {
         "engine" -> "Engine"
@@ -218,8 +416,66 @@ object EnglishStrings : Strings {
 }
 
 object GeorgianStrings : Strings {
-    override val appName = "craftsmen"
+    override val appName = "AutoFix"
+    override val brandTagline = "ხელოსნები შენი მანქანისთვის"
     override val location = "აღმოსავლეთი"
+
+    override val splashTagline = "ხელოსნები შენი მანქანისთვის"
+
+    override val loginTitle = "კეთილი იყოს დაბრუნება"
+    override val loginSubtitle = "გაიარე ავტორიზაცია გასაგრძელებლად"
+    override val emailLabel = "ელფოსტა"
+    override val emailPlaceholder = "you@example.com"
+    override val passwordLabel = "პაროლი"
+    override val passwordPlaceholder = "შეიყვანე პაროლი"
+    override val forgotPassword = "დაგავიწყდა პაროლი?"
+    override val loginAction = "შესვლა"
+
+    override val forgotTitle = "პაროლის აღდგენა"
+    override val forgotSubtitle = "შეიყვანე ელფოსტა და გამოგიგზავნით კოდს."
+    override val forgotSendCodeAction = "კოდის გაგზავნა"
+    override val resetTitle = "შეიყვანე კოდი"
+    override val resetSubtitle = "ჩაწერე 6-ციფრიანი კოდი და აირჩიე ახალი პაროლი."
+    override val resetCodeLabel = "კოდი"
+    override val resetCodePlaceholder = "123456"
+    override val resetNewPasswordLabel = "ახალი პაროლი"
+    override val resetNewPasswordPlaceholder = "მინიმუმ 8 სიმბოლო"
+    override val resetConfirmAction = "პაროლის აღდგენა"
+    override val resetDemoNote = "დემო რეჟიმი: კოდი წინასწარ ჩაწერილია."
+    override val noAccountQuestion = "არ გაქვს ანგარიში?"
+    override val registerCta = "ანგარიშის შექმნა"
+    override val orDivider = "ან"
+
+    override val registerPickerTitle = "შემოუერთდი AutoFix-ს"
+    override val registerPickerSubtitle = "აირჩიე ანგარიშის ტიპი"
+    override val roleUserTitle = "ვარ მანქანის მფლობელი"
+    override val roleUserSubtitle = "იპოვე სანდო ხელოსნები"
+    override val roleMechanicTitle = "ვარ ხელოსანი"
+    override val roleMechanicSubtitle = "მიიღე შეკვეთები და გაზარდე სახელოსნო"
+
+    override val registerUserTitle = "მომხმარებლის ანგარიში"
+    override val registerMechanicTitle = "ხელოსნის ანგარიში"
+    override val registerUserSubtitle = "მოგვიყევი ცოტა შენ შესახებ"
+    override val registerMechanicSubtitle = "დაამატე შენი სახელოსნოს დეტალები"
+    override val fullNameLabel = "სახელი და გვარი"
+    override val fullNamePlaceholder = "შენი სახელი"
+    override val phoneLabel = "ტელეფონი"
+    override val phonePlaceholder = "+995 5XX XXX XXX"
+    override val confirmPasswordLabel = "გაიმეორე პაროლი"
+    override val confirmPasswordPlaceholder = "შეიყვანე ისევ პაროლი"
+    override val workshopNameLabel = "სახელოსნოს დასახელება"
+    override val workshopNamePlaceholder = "მაგ. East Side Auto"
+    override val specialtyLabel = "ძირითადი სპეციალობა"
+    override val specialtyPlaceholder = "მაგ. ძრავი, მუხრუჭები, EV"
+    override val experienceLabel = "გამოცდილება (წელი)"
+    override val experiencePlaceholder = "5"
+    override val cityLabel = "ქალაქი"
+    override val cityPlaceholder = "მაგ. თბილისი"
+    override val agreeTermsPrefix = "ვეთანხმები"
+    override val agreeTermsLink = "პირობებსა და კონფიდენციალურობას"
+    override val createAccountAction = "ანგარიშის შექმნა"
+    override val haveAccountQuestion = "უკვე გაქვს ანგარიში?"
+    override val loginCta = "შესვლა"
 
     override val homeTitle1 = "იპოვეთ ხელოსანი"
     override val homeTitle2 = "რომელმაც იცის თქვენი მანქანა."
@@ -295,6 +551,48 @@ object GeorgianStrings : Strings {
         "$name შეგხვდებათ ოთხშაბათს 11:00-ზე. დადასტურება გამოგიგზავნეთ თქვენს ტელეფონზე."
     override val confirmDateTime = "ოთხ 29 აპრ · 11:00"
     override val backToHome = "მთავარზე დაბრუნება"
+
+    override val tabHome = "მთავარი"
+    override val tabShop = "მაღაზია"
+    override val tabSettings = "პარამეტრები"
+
+    override val settingsTitle = "პარამეტრები"
+    override val settingsAccountSection = "ანგარიში"
+    override val settingsRoleLabel = "როლი"
+    override val settingsLogoutAction = "გასვლა"
+    override val settingsLogoutConfirmTitle = "გავიდე ანგარიშიდან?"
+    override val settingsLogoutConfirmMessage = "აპლიკაციის გამოყენებისთვის მოგიწევს ხელახლა შესვლა."
+    override val settingsCancel = "გაუქმება"
+    override fun settingsRole(role: String) = when (role) {
+        "user" -> "მომხმარებელი"
+        "mechanic" -> "ხელოსანი"
+        "admin" -> "ადმინი"
+        else -> role
+    }
+
+    override val shopTitle1 = "იპოვე ნაწილები"
+    override val shopTitle2 = "და დაუკავშირდი გამყიდველს."
+    override val shopSearchPlaceholder = "მოძებნე ნაწილი, ბრენდი ან გამყიდველი"
+    override val partsCategoryAll = "ყველა"
+    override val noPartsMatch = "ნაწილები ვერ მოიძებნა."
+    override val resetSearch = "ძიების გასუფთავება"
+    override val partsCount = "ნაწილი"
+    override val outOfStock = "არ არის მარაგში"
+    override val inStockLabel = "მარაგშია"
+    override fun fitsLabel(brand: String) = "ერგება $brand-ს"
+    override val fitsAnyLabel = "ნებისმიერ მოდელზე"
+    override fun conditionLabel(condition: String) = when (condition) {
+        "New" -> "ახალი"
+        "Used" -> "მეორადი"
+        "Refurbished" -> "აღდგენილი"
+        else -> condition
+    }
+    override val sellerSection = "გამყიდველი"
+    override val partAboutSection = "ნაწილის შესახებ"
+    override val callSeller = "ზარი"
+    override val whatsappSeller = "WhatsApp"
+    override val chatSeller = "მესიჯი"
+    override fun ratingShort(rating: Double) = rating.toString()
 
     override fun specialtyName(id: String) = when (id) {
         "engine" -> "ძრავი"

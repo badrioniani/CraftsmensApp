@@ -216,6 +216,134 @@ fun IconShield(size: Dp, color: Color, modifier: Modifier = Modifier) =
     }
 
 @Composable
+fun IconWrench(size: Dp, color: Color, modifier: Modifier = Modifier, stroke: Float = 1.75f) =
+    LineIcon(size, color, modifier, stroke) { s, c ->
+        val p = Path().apply {
+            moveTo(14.7f, 6.3f)
+            cubicTo(13.2f, 4.8f, 13.2f, 2.4f, 14.7f, 0.9f)
+            lineTo(15.9f, 2.1f)
+            cubicTo(15f, 3f, 15f, 4.5f, 15.9f, 5.4f)
+            cubicTo(16.8f, 6.3f, 18.3f, 6.3f, 19.2f, 5.4f)
+            lineTo(20.4f, 6.6f)
+            cubicTo(18.9f, 8.1f, 16.5f, 8.1f, 15f, 6.6f)
+            lineTo(5.4f, 16.2f)
+            cubicTo(4.5f, 17.1f, 4.5f, 18.6f, 5.4f, 19.5f)
+            cubicTo(6.3f, 20.4f, 7.8f, 20.4f, 8.7f, 19.5f)
+            lineTo(18.3f, 9.9f)
+            lineTo(19.5f, 11.1f)
+            lineTo(9.9f, 20.7f)
+            cubicTo(8.4f, 22.2f, 6f, 22.2f, 4.5f, 20.7f)
+            cubicTo(3f, 19.2f, 3f, 16.8f, 4.5f, 15.3f)
+            lineTo(14.1f, 5.7f)
+            close()
+        }
+        drawPath(p, c, style = s)
+    }
+
+@Composable
+fun IconUser(size: Dp, color: Color, modifier: Modifier = Modifier) =
+    LineIcon(size, color, modifier) { s, c ->
+        drawPath(circle(12f, 8f, 4f), c, style = s)
+        val p = Path().apply {
+            moveTo(4f, 21f)
+            cubicTo(4f, 16.5f, 7.5f, 14f, 12f, 14f)
+            cubicTo(16.5f, 14f, 20f, 16.5f, 20f, 21f)
+        }
+        drawPath(p, c, style = s)
+    }
+
+@Composable
+fun IconMail(size: Dp, color: Color, modifier: Modifier = Modifier) =
+    LineIcon(size, color, modifier) { s, c ->
+        drawPath(rectPath(2f, 5f, 20f, 14f, 2f), c, style = s)
+        drawPath(Path().apply { moveTo(2f, 7f); lineTo(12f, 13f); lineTo(22f, 7f) }, c, style = s)
+    }
+
+@Composable
+fun IconLock(size: Dp, color: Color, modifier: Modifier = Modifier) =
+    LineIcon(size, color, modifier) { s, c ->
+        drawPath(rectPath(4f, 11f, 16f, 10f, 2f), c, style = s)
+        val p = Path().apply {
+            moveTo(8f, 11f)
+            lineTo(8f, 7f)
+            cubicTo(8f, 4.8f, 9.8f, 3f, 12f, 3f)
+            cubicTo(14.2f, 3f, 16f, 4.8f, 16f, 7f)
+            lineTo(16f, 11f)
+        }
+        drawPath(p, c, style = s)
+    }
+
+@Composable
+fun IconEye(size: Dp, color: Color, modifier: Modifier = Modifier) =
+    LineIcon(size, color, modifier) { s, c ->
+        val p = Path().apply {
+            moveTo(2f, 12f)
+            cubicTo(2f, 12f, 6f, 5f, 12f, 5f)
+            cubicTo(18f, 5f, 22f, 12f, 22f, 12f)
+            cubicTo(22f, 12f, 18f, 19f, 12f, 19f)
+            cubicTo(6f, 19f, 2f, 12f, 2f, 12f)
+            close()
+        }
+        drawPath(p, c, style = s)
+        drawPath(circle(12f, 12f, 3f), c, style = s)
+    }
+
+@Composable
+fun IconEyeOff(size: Dp, color: Color, modifier: Modifier = Modifier) =
+    LineIcon(size, color, modifier) { s, c ->
+        val p = Path().apply {
+            moveTo(2f, 12f)
+            cubicTo(2f, 12f, 6f, 5f, 12f, 5f)
+            cubicTo(18f, 5f, 22f, 12f, 22f, 12f)
+            cubicTo(22f, 12f, 18f, 19f, 12f, 19f)
+            cubicTo(6f, 19f, 2f, 12f, 2f, 12f)
+            close()
+        }
+        drawPath(p, c, style = s)
+        drawPath(line(3f, 3f, 21f, 21f), c, style = s)
+    }
+
+@Composable
+fun IconHome(size: Dp, color: Color, modifier: Modifier = Modifier, stroke: Float = 1.75f) =
+    LineIcon(size, color, modifier, stroke) { s, c ->
+        val p = Path().apply {
+            moveTo(3f, 11f)
+            lineTo(12f, 3f)
+            lineTo(21f, 11f)
+            lineTo(21f, 21f)
+            lineTo(14f, 21f)
+            lineTo(14f, 14f)
+            lineTo(10f, 14f)
+            lineTo(10f, 21f)
+            lineTo(3f, 21f)
+            close()
+        }
+        drawPath(p, c, style = s)
+    }
+
+@Composable
+fun IconShop(size: Dp, color: Color, modifier: Modifier = Modifier, stroke: Float = 1.75f) =
+    LineIcon(size, color, modifier, stroke) { s, c ->
+        // Shopping bag silhouette
+        val p = Path().apply {
+            moveTo(4f, 7f)
+            lineTo(20f, 7f)
+            lineTo(19f, 21f)
+            lineTo(5f, 21f)
+            close()
+        }
+        drawPath(p, c, style = s)
+        val handle = Path().apply {
+            moveTo(8f, 7f)
+            lineTo(8f, 5f)
+            cubicTo(8f, 3f, 9.8f, 2f, 12f, 2f)
+            cubicTo(14.2f, 2f, 16f, 3f, 16f, 5f)
+            lineTo(16f, 7f)
+        }
+        drawPath(handle, c, style = s)
+    }
+
+@Composable
 fun IconCalendar(size: Dp, color: Color, modifier: Modifier = Modifier) =
     LineIcon(size, color, modifier) { s, c ->
         drawPath(rectPath(3f, 4f, 18f, 18f, 2f), c, style = s)
@@ -335,4 +463,36 @@ fun SpecIcon(id: String, size: Dp, color: Color, modifier: Modifier = Modifier) 
             }
             else -> drawPath(circle(12f, 12f, 9f), c, style = s)
         }
+    }
+
+@Composable
+fun IconSettings(size: Dp, color: Color, modifier: Modifier = Modifier, stroke: Float = 1.75f) =
+    LineIcon(size, color, modifier, stroke) { st, c ->
+        // Gear: 8 spokes around an inner ring
+        drawPath(circle(12f, 12f, 3f), c, style = st)
+        drawPath(circle(12f, 12f, 7.5f), c, style = st)
+        for (i in 0 until 8) {
+            val ang = (i * 45f) * (kotlin.math.PI.toFloat() / 180f)
+            val cos = kotlin.math.cos(ang)
+            val sin = kotlin.math.sin(ang)
+            drawPath(
+                line(12f + cos * 7.5f, 12f + sin * 7.5f, 12f + cos * 10f, 12f + sin * 10f),
+                c,
+                style = st,
+            )
+        }
+    }
+
+@Composable
+fun IconSignOut(size: Dp, color: Color, modifier: Modifier = Modifier, stroke: Float = 1.75f) =
+    LineIcon(size, color, modifier, stroke) { st, c ->
+        // Door
+        drawPath(Path().apply {
+            moveTo(14f, 4f); lineTo(7f, 4f); lineTo(7f, 20f); lineTo(14f, 20f)
+        }, c, style = st)
+        // Arrow out
+        drawPath(line(11f, 12f, 21f, 12f), c, style = st)
+        drawPath(Path().apply {
+            moveTo(17f, 8f); lineTo(21f, 12f); lineTo(17f, 16f)
+        }, c, style = st)
     }
