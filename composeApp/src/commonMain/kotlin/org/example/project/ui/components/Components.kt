@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.Text
-import org.example.project.data.CarBrand
 import org.example.project.ui.icons.IconBack
 import org.example.project.ui.icons.IconStar
 import org.example.project.ui.theme.CraftsmenColors
@@ -130,17 +129,19 @@ fun AppButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    busy: Boolean = false,
     variant: ButtonVariant = ButtonVariant.Primary,
     leadingIcon: (@Composable () -> Unit)? = null,
 ) {
     val (bg, fg, bd) = when (variant) {
         ButtonVariant.Primary -> Triple(
-            if (enabled) theme.accent else theme.border,
+            if (enabled || busy) theme.accent else theme.border,
             theme.accentText, Color.Transparent
         )
         ButtonVariant.Secondary -> Triple(Color.Transparent, theme.text, theme.borderStrong)
         ButtonVariant.Ghost -> Triple(theme.bgRaised, theme.text, theme.border)
     }
+    val clickable = enabled && !busy
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -148,17 +149,21 @@ fun AppButton(
             .clip(RoundedCornerShape(14.dp))
             .background(bg)
             .border(1.dp, bd, RoundedCornerShape(14.dp))
-            .clickable(enabled = enabled, onClick = onClick),
+            .clickable(enabled = clickable, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            if (leadingIcon != null) leadingIcon()
+            if (busy) {
+                AppSpinner(size = 18.dp, color = fg)
+            } else if (leadingIcon != null) {
+                leadingIcon()
+            }
             Text(
                 text = text,
-                color = fg.copy(alpha = if (enabled) 1f else 0.5f),
+                color = fg.copy(alpha = if (clickable || busy) 1f else 0.5f),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
             )
@@ -245,35 +250,6 @@ fun MonoLabel(
             fontSize = 10.sp,
             fontWeight = FontWeight.Medium,
             letterSpacing = 0.8.sp,
-        )
-    }
-}
-
-// ────────── Brand mark monogram ──────────
-@Composable
-fun BrandMark(brand: CarBrand, size: Dp, dark: Boolean, modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .size(size)
-            .clip(RoundedCornerShape(12.dp))
-            .background(if (dark) Color(0xFF222222) else Color.White)
-            .border(1.5.dp, brand.color, RoundedCornerShape(12.dp)),
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(
-            text = brand.name.first().toString(),
-            color = brand.color,
-            fontSize = (size.value * 0.42f).sp,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-        )
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(4.dp)
-                .size(4.dp)
-                .clip(CircleShape)
-                .background(brand.color),
         )
     }
 }

@@ -23,6 +23,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,20 +34,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.example.project.data.CAR_BRANDS
-import org.example.project.data.CarBrand
 import org.example.project.data.Mechanic
-import org.example.project.data.REVIEWS
-import org.example.project.data.Specialty
+import org.example.project.data.Review
+import org.example.project.data.mechanics.MechanicApi
+import org.example.project.data.mechanics.toUiModel
 import org.example.project.ui.components.AppButton
-import org.example.project.ui.components.BrandMark
 import org.example.project.ui.components.IconButton40
 import org.example.project.ui.components.MonoLabel
 import org.example.project.ui.components.Section
 import org.example.project.ui.components.StickyBottom
 import org.example.project.ui.i18n.LocalStrings
 import org.example.project.ui.icons.IconBack
-import org.example.project.ui.icons.IconCalendar
 import org.example.project.ui.icons.IconChat
 import org.example.project.ui.icons.IconChevron
 import org.example.project.ui.icons.IconClock
@@ -53,23 +53,26 @@ import org.example.project.ui.icons.IconPin
 import org.example.project.ui.icons.IconShield
 import org.example.project.ui.icons.IconStar
 import org.example.project.ui.icons.IconStarOutline
-import org.example.project.ui.icons.SpecIcon
 import org.example.project.ui.theme.CraftsmenColors
 
 @Composable
 fun DetailScreen(
     theme: CraftsmenColors,
-    brand: CarBrand,
-    spec: Specialty,
     mech: Mechanic,
     onBack: () -> Unit,
-    onBook: () -> Unit,
     onCall: () -> Unit,
     onWhatsapp: () -> Unit,
     onDirections: () -> Unit,
     onReviews: () -> Unit,
 ) {
     val s = LocalStrings.current
+    val reviewApi = remember { MechanicApi() }
+    val reviews by produceState(initialValue = emptyList<Review>(), mech.id) {
+        val id = mech.id.toIntOrNull()
+        value = if (id != null) {
+            runCatching { reviewApi.reviews(id).results.map { it.toUiModel(mech.id) } }.getOrDefault(emptyList())
+        } else emptyList()
+    }
     Column(modifier = Modifier.fillMaxSize().background(theme.bg)) {
         LazyColumn(
             modifier = Modifier.weight(1f).fillMaxWidth(),
@@ -90,7 +93,7 @@ fun DetailScreen(
             }
             item {
                 Section(theme, s.specialties) {
-                    SpecChips(theme, mech, currentSpec = spec)
+                    SpecChips(theme, mech)
                 }
             }
             item {
@@ -134,9 +137,8 @@ fun DetailScreen(
                         )
                     },
                 ) {
-                    val reviews = REVIEWS.filter { it.mechId == mech.id }.take(2)
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        reviews.forEach { ReviewCard(theme, it) }
+                        reviews.take(2).forEach { ReviewCard(theme, it) }
                     }
                 }
             }
@@ -146,29 +148,39 @@ fun DetailScreen(
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Box(
                     modifier = Modifier
-                        .size(52.dp)
+                        .weight(1f)
+                        .height(52.dp)
                         .clip(RoundedCornerShape(14.dp))
                         .background(theme.bgRaised)
                         .border(1.dp, theme.border, RoundedCornerShape(14.dp))
                         .clickable(onClick = onCall),
                     contentAlignment = Alignment.Center,
-                ) { IconPhone(size = 20.dp, color = theme.text) }
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        IconPhone(size = 18.dp, color = theme.text)
+                        Text(s.cardCall, color = theme.text, fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+                    }
+                }
                 Box(
                     modifier = Modifier
-                        .size(52.dp)
+                        .weight(1f)
+                        .height(52.dp)
                         .clip(RoundedCornerShape(14.dp))
-                        .background(theme.bgRaised)
-                        .border(1.dp, theme.border, RoundedCornerShape(14.dp))
+                        .background(theme.accent)
                         .clickable(onClick = onWhatsapp),
                     contentAlignment = Alignment.Center,
-                ) { IconChat(size = 20.dp, color = theme.text) }
-                AppButton(
-                    theme = theme,
-                    text = s.bookAppointment,
-                    onClick = onBook,
-                    modifier = Modifier.weight(1f),
-                    leadingIcon = { IconCalendar(size = 18.dp, color = theme.accentText) },
-                )
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        IconChat(size = 18.dp, color = theme.accentText)
+                        Text(s.cardWhatsapp, color = theme.accentText, fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+                    }
+                }
             }
         }
     }
@@ -317,6 +329,21 @@ private fun BadgesRow(theme: CraftsmenColors, mech: Mechanic) {
         horizontalArrangement = Arrangement.spacedBy(6.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
+        if (mech.vip) {
+            val gold = Color(0xFFF59E0B)
+            Row(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .background(gold.copy(alpha = 0.15f))
+                    .border(1.dp, gold.copy(alpha = 0.5f), CircleShape)
+                    .padding(horizontal = 10.dp, vertical = 6.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                IconStar(size = 11.dp, color = gold)
+                Text(text = "VIP", color = gold, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+            }
+        }
         mech.badges.forEach { b ->
             Box(
                 modifier = Modifier
@@ -337,27 +364,23 @@ private fun BadgesRow(theme: CraftsmenColors, mech: Mechanic) {
 }
 
 @Composable
-private fun SpecChips(theme: CraftsmenColors, mech: Mechanic, currentSpec: Specialty) {
-    val s = LocalStrings.current
+private fun SpecChips(theme: CraftsmenColors, mech: Mechanic) {
     androidx.compose.foundation.layout.FlowRow(
         horizontalArrangement = Arrangement.spacedBy(6.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
-        mech.specialties.forEach { sid ->
-            val match = sid == currentSpec.id
+        mech.specialties.forEach { name ->
             Row(
                 modifier = Modifier
                     .clip(CircleShape)
-                    .background(if (match) theme.accentSoft else theme.bgRaised)
-                    .border(1.dp, if (match) theme.accent else theme.border, CircleShape)
+                    .background(theme.bgRaised)
+                    .border(1.dp, theme.border, CircleShape)
                     .padding(horizontal = 11.dp, vertical = 7.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
             ) {
-                SpecIcon(id = sid, size = 12.dp, color = if (match) theme.accent else theme.textDim)
                 Text(
-                    text = s.specialtyName(sid),
-                    color = if (match) theme.accent else theme.text,
+                    text = name,
+                    color = theme.text,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
                 )
@@ -372,19 +395,16 @@ private fun BrandsRow(theme: CraftsmenColors, mech: Mechanic) {
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        mech.brands.forEach { bid ->
-            val b = CAR_BRANDS.firstOrNull { it.id == bid } ?: return@forEach
+        mech.brands.forEach { name ->
             Row(
                 modifier = Modifier
                     .clip(RoundedCornerShape(10.dp))
                     .background(theme.bgRaised)
                     .border(1.dp, theme.border, RoundedCornerShape(10.dp))
-                    .padding(start = 6.dp, end = 10.dp, top = 6.dp, bottom = 6.dp),
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                BrandMark(brand = b, size = 26.dp, dark = theme.isDark)
-                Text(text = b.name, color = theme.text, fontSize = 13.sp, fontWeight = FontWeight.Medium)
+                Text(text = name, color = theme.text, fontSize = 13.sp, fontWeight = FontWeight.Medium)
             }
         }
     }

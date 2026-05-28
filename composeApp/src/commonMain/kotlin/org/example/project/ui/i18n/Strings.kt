@@ -10,7 +10,6 @@ enum class AppLanguage(val code: String, val display: String) {
 interface Strings {
     val appName: String
     val brandTagline: String
-    val location: String
 
     // Splash
     val splashTagline: String
@@ -73,48 +72,123 @@ interface Strings {
     val createAccountAction: String
     val haveAccountQuestion: String
     val loginCta: String
+    val emailInvalid: String
+    val passwordHint: String
+    val pwStrengthWeak: String
+    val pwStrengthFair: String
+    val pwStrengthGood: String
+    val pwStrengthStrong: String
+    val registerTermsNotice: String
 
-    // Home
-    val homeTitle1: String
-    val homeTitle2: String
-    val searchPlaceholder: String
-    val pickBrand: String
-    val dontSeeBrand: String
-    val addManually: String
+    // Guest mode
+    val continueAsGuest: String
+    val guestModeTitle: String
+    val guestModeBody: String
 
-    // Specialty
-    val specQuestion: String
-    val forYour: String
-    val estPrefix: String
-    val change: String
-    val pickSpecialty: String
-    val selectSpecialty: String
-    val jobsDone: String
-    fun findCraftsmenFor(spec: String): String
+    // Mechanic dashboard
+    val dashTitle: String
+    val dashNotMechanic: String
+    val dashLoginRequired: String
+    val dashEditProfile: String
+    val dashViewPublic: String
+    val dashSaveProfile: String
+    val dashSaving: String
+    val dashAwaitingVerification: String
+    val dashNoProfile: String
+    val dashCreateProfileTitle: String
+    val dashCreateProfileBody: String
+    val dashStatRating: String
+    val dashStatReviews: String
+    val dashStatSpecs: String
+    val dashStatStatus: String
+    val dashSectionBusiness: String
+    val dashSectionLocation: String
+    val dashSectionServices: String
+    val dashBusinessName: String
+    val dashDescription: String
+    val dashDescriptionPlaceholder: String
+    val dashPhone: String
+    val dashWhatsapp: String
+    val dashCity: String
+    val dashDistrict: String
+    val dashAddress: String
+    val dashSelectCity: String
+    val dashSelectDistrict: String
+    val dashLocationPin: String
+    val dashUseMyLocation: String
+    val dashClearPin: String
+    val dashClickToPin: String
+    val dashLocationNotSet: String
+    val dashBrand: String
+    val dashAllBrands: String
+    val dashAllModels: String
+    val dashAllServices: String
+    val dashService: String
+    val dashSpecsEmpty: String
+    val dashCompleteness: String
+    val dashTipsTitle: String
+    val dashTip1: String
+    val dashTip2: String
+    val dashTip3: String
+    val dashRecentReviews: String
+    val dashReviewsAppearHere: String
+    val dashProfileSaved: String
+    val dashSaveError: String
+    val dashIncompleteSpec: String
 
-    // List
+    // Home (hero / featured)
+    val homeEyebrow: String
+    val homeTitleA: String
+    val homeTitleB: String
+    val homeSubtitle: String
+    val homeBrowseCatalog: String
+    val statMechanics: String
+    val statBrands: String
+    val statAvgRating: String
+    val valueVerifiedTitle: String
+    val valueVerifiedBody: String
+    val valueReviewsTitle: String
+    val valueReviewsBody: String
+    val valueFeesTitle: String
+    val valueFeesBody: String
+    val featuredChip: String
+    val featuredTitle: String
+    val featuredSubtitle: String
+    val featuredViewAll: String
+
+    // Filters
     val filters: String
+    val filtersReset: String
+    val searchPlaceholder: String
+    val anyBrand: String
+    val anyService: String
+    val anyCity: String
+    val anyDistrict: String
+    val anyRating: String
+    val ratingStars: String
+    val verifiedOnly: String
+    val applyFilters: String
+
+    // Catalog
+    val catalogTitle: String
+    val catalogSubtitle: String
+    val catalogEmptyTitle: String
+    val catalogEmptyBody: String
     val sortNearest: String
     val sortRating: String
     val sortExperience: String
-    fun fallbackNoBrand(brand: String, spec: String): String
-    val noMatch: String
-    val resetFilters: String
+
+    // Card
+    val cardCall: String
+    val cardWhatsapp: String
+    val cardViewProfile: String
     val openNow: String
     val closed: String
-    val craftsmenSuffix: String
     val expSuffix: String
 
-    // Filter sheet
-    val minRating: String
-    val yearsExp: String
-    fun maxDistanceLabel(km: Int): String
-    val maxPrice: String
-    val availableToday: String
-    val reset: String
-    val applyFilters: String
-    val any: String
-    fun yrsLabel(n: Int): String
+    // Verified
+    val badgeVerified: String
+    val badgeUnverified: String
 
     // Detail
     val about: String
@@ -130,71 +204,63 @@ interface Strings {
     val contactWhatsapp: String
     val contactAddress: String
     val contactHours: String
-    val bookAppointment: String
+    val openInMaps: String
+    val directions: String
+    val detailReviewsCount: String
 
     // Reviews
     val reviewsTitle: String
-    val reviewsSuffix: String
 
     // Map
     val nearby: String
+    val mapViewList: String
+    val mapViewMap: String
 
-    // Book
-    val bookSlot: String
-    val diagnosticSuffix: String
-    val pickDate: String
-    val pickTime: String
-    val describeIssue: String
-    val issuePlaceholder: String
-    fun confirmAt(day: String, time: String): String
-    val pickTimeSlot: String
+    // Shops
+    val shopsTitle: String
+    val shopsSubtitle: String
+    val shopsEmptyTitle: String
+    val shopsEmptyBody: String
+    val shopCategory: String
+    val shopAnyCategory: String
+    val shopVisitWebsite: String
+    fun shopCategoryName(id: String): String
 
-    // Confirm
-    val booked: String
-    fun bookedSubtitle(name: String): String
-    val confirmDateTime: String
-    val backToHome: String
+    // Garage
+    val garageTitle: String
+    val garageSubtitle: String
+    val garageAdd: String
+    val garageEmptyTitle: String
+    val garageEmptyBody: String
+    val garageBrand: String
+    val garageModel: String
+    val garageYear: String
+    val garageNickname: String
+    val garageNicknamePlaceholder: String
+    val garageSave: String
+    val garageDelete: String
+    val garageLoginRequired: String
 
     val done: String
+    val cancel: String
 
     // Bottom nav
     val tabHome: String
-    val tabShop: String
-    val tabSettings: String
+    val tabShops: String
+    val tabGarage: String
+    val tabProfile: String
 
-    // Settings
-    val settingsTitle: String
-    val settingsAccountSection: String
-    val settingsRoleLabel: String
-    val settingsLogoutAction: String
-    val settingsLogoutConfirmTitle: String
-    val settingsLogoutConfirmMessage: String
-    val settingsCancel: String
-    fun settingsRole(role: String): String
-
-    // Shop
-    val shopTitle1: String
-    val shopTitle2: String
-    val shopSearchPlaceholder: String
-    val partsCategoryAll: String
-    val noPartsMatch: String
-    val resetSearch: String
-    val partsCount: String
-    val outOfStock: String
-    val inStockLabel: String
-    fun fitsLabel(brand: String): String
-    val fitsAnyLabel: String
-    fun conditionLabel(condition: String): String
-    val sellerSection: String
-    val partAboutSection: String
-    val callSeller: String
-    val whatsappSeller: String
-    val chatSeller: String
-    fun ratingShort(rating: Double): String
+    // Profile / Settings
+    val profileTitle: String
+    val profileAccountSection: String
+    val profileRoleLabel: String
+    val profileLogoutAction: String
+    val profileLogoutConfirmTitle: String
+    val profileLogoutConfirmMessage: String
+    fun profileRole(role: String): String
 
     // Specialty names
     fun specialtyName(id: String): String
-    fun specialtyDesc(id: String): String
 
     // Country names
     fun country(name: String): String
@@ -202,13 +268,12 @@ interface Strings {
 
 object EnglishStrings : Strings {
     override val appName = "AutoFix"
-    override val brandTagline = "Mechanics that match your ride"
-    override val location = "EAST SIDE"
+    override val brandTagline = "Trusted Georgian mechanics, in one place"
 
-    override val splashTagline = "Mechanics that match your ride"
+    override val splashTagline = "Trusted Georgian mechanics, in one place"
 
     override val loginTitle = "Welcome back"
-    override val loginSubtitle = "Sign in to continue"
+    override val loginSubtitle = "Sign in to manage reviews and your saved garage."
     override val emailLabel = "Email"
     override val emailPlaceholder = "you@example.com"
     override val passwordLabel = "Password"
@@ -227,20 +292,20 @@ object EnglishStrings : Strings {
     override val resetNewPasswordPlaceholder = "At least 8 characters"
     override val resetConfirmAction = "Reset password"
     override val resetDemoNote = "Demo mode: code prefilled from server."
-    override val noAccountQuestion = "Don't have an account?"
+    override val noAccountQuestion = "New here?"
     override val registerCta = "Create account"
     override val orDivider = "OR"
 
     override val registerPickerTitle = "Join AutoFix"
     override val registerPickerSubtitle = "Pick the account type that fits you"
     override val roleUserTitle = "I'm a car owner"
-    override val roleUserSubtitle = "Find trusted mechanics for your car"
+    override val roleUserSubtitle = "Find and review trusted mechanics"
     override val roleMechanicTitle = "I'm a mechanic"
-    override val roleMechanicSubtitle = "Get jobs and grow your workshop"
+    override val roleMechanicSubtitle = "List my business in the catalog"
 
     override val registerUserTitle = "Create user account"
     override val registerMechanicTitle = "Create mechanic account"
-    override val registerUserSubtitle = "Tell us a bit about yourself"
+    override val registerUserSubtitle = "Browse the catalog and save your garage"
     override val registerMechanicSubtitle = "Set up your workshop profile"
     override val fullNameLabel = "Full name"
     override val fullNamePlaceholder = "Your name"
@@ -261,45 +326,119 @@ object EnglishStrings : Strings {
     override val createAccountAction = "Create account"
     override val haveAccountQuestion = "Already have an account?"
     override val loginCta = "Sign in"
+    override val emailInvalid = "Looks like that email isn't valid."
+    override val passwordHint = "At least 8 characters."
+    override val pwStrengthWeak = "Weak — add more length and variety."
+    override val pwStrengthFair = "Fair — try mixing letters, numbers, and a symbol."
+    override val pwStrengthGood = "Good — solid choice."
+    override val pwStrengthStrong = "Strong — nice work."
+    override val registerTermsNotice =
+        "By creating an account you agree to our terms and accept that this is a demo project."
 
-    override val homeTitle1 = "Find a craftsman"
-    override val homeTitle2 = "that knows your car."
-    override val searchPlaceholder = "Search brand or model"
-    override val pickBrand = "Pick your car brand"
-    override val dontSeeBrand = "Don't see your brand?"
-    override val addManually = "+ Add it manually"
+    override val continueAsGuest = "Continue as guest"
+    override val guestModeTitle = "You're browsing as a guest"
+    override val guestModeBody =
+        "Sign in or create an account to save your garage, leave reviews, and manage your profile."
 
-    override val specQuestion = "What's the issue?"
-    override val forYour = "FOR YOUR"
-    override val estPrefix = "EST."
-    override val change = "Change"
-    override val pickSpecialty = "Pick a specialty"
-    override val selectSpecialty = "Select a specialty"
-    override val jobsDone = "JOBS DONE"
-    override fun findCraftsmenFor(spec: String) = "Find craftsmen for $spec"
+    override val dashTitle = "Mechanic dashboard"
+    override val dashNotMechanic = "This dashboard is available for mechanic accounts."
+    override val dashLoginRequired = "Login is required for the mechanic dashboard."
+    override val dashEditProfile = "Edit profile"
+    override val dashViewPublic = "View public profile"
+    override val dashSaveProfile = "Save profile"
+    override val dashSaving = "Saving…"
+    override val dashAwaitingVerification = "Awaiting verification"
+    override val dashNoProfile = "No mechanic profile yet."
+    override val dashCreateProfileTitle = "No profile yet"
+    override val dashCreateProfileBody = "Fill in your profile so you show up in the catalog."
+    override val dashStatRating = "Rating"
+    override val dashStatReviews = "Reviews"
+    override val dashStatSpecs = "Specializations"
+    override val dashStatStatus = "Status"
+    override val dashSectionBusiness = "Business"
+    override val dashSectionLocation = "Location"
+    override val dashSectionServices = "Services & vehicles"
+    override val dashBusinessName = "Business name"
+    override val dashDescription = "Description"
+    override val dashDescriptionPlaceholder =
+        "Tell customers what your shop is great at — brands, hours, anything that builds trust."
+    override val dashPhone = "Phone"
+    override val dashWhatsapp = "WhatsApp"
+    override val dashCity = "City"
+    override val dashDistrict = "District"
+    override val dashAddress = "Address"
+    override val dashSelectCity = "Select city…"
+    override val dashSelectDistrict = "Select district"
+    override val dashLocationPin = "Pin your location on the map"
+    override val dashUseMyLocation = "Use my location"
+    override val dashClearPin = "Clear pin"
+    override val dashClickToPin = "Tap the map to drop a pin"
+    override val dashLocationNotSet = "Location pin not set yet."
+    override val dashBrand = "Brand"
+    override val dashAllBrands = "All brands"
+    override val dashAllModels = "All models"
+    override val dashAllServices = "All services"
+    override val dashService = "Service"
+    override val dashSpecsEmpty = "No specializations yet. Add at least one so customers can find you."
+    override val dashCompleteness = "Profile completeness"
+    override val dashTipsTitle = "Tips for a strong profile"
+    override val dashTip1 = "Add a clear description — what makes your shop different?"
+    override val dashTip2 = "Pin your exact location so customers can find you."
+    override val dashTip3 = "List every brand you work on to maximise matches."
+    override val dashRecentReviews = "Recent reviews"
+    override val dashReviewsAppearHere = "Reviews will appear here."
+    override val dashProfileSaved = "Profile saved."
+    override val dashSaveError = "Could not save profile. Check required fields and specialization rows."
+    override val dashIncompleteSpec = "Each specialization needs both a brand and a service. Fix or remove the highlighted rows."
+
+    override val homeEyebrow = "Trusted Georgian mechanics, in one place"
+    override val homeTitleA = "Fix your car with a mechanic"
+    override val homeTitleB = "you can trust."
+    override val homeSubtitle = "Search by brand, model, service, district, and rating. Verified profiles only — or open it up to everyone with one tap."
+    override val homeBrowseCatalog = "Browse catalog"
+    override val statMechanics = "MECHANICS"
+    override val statBrands = "BRANDS"
+    override val statAvgRating = "AVG. RATING"
+    override val valueVerifiedTitle = "Verified profiles"
+    override val valueVerifiedBody = "Admins manually verify mechanic businesses before they get the green badge."
+    override val valueReviewsTitle = "Real reviews"
+    override val valueReviewsBody = "One review per customer per mechanic. Ratings update in real time."
+    override val valueFeesTitle = "No hidden fees"
+    override val valueFeesBody = "Browsing the catalog is free, forever. Mechanics keep 100% of every job."
+    override val featuredChip = "FEATURED"
+    override val featuredTitle = "Top verified mechanics"
+    override val featuredSubtitle = "Filtered by Tbilisi."
+    override val featuredViewAll = "View all"
 
     override val filters = "Filters"
+    override val filtersReset = "Reset"
+    override val searchPlaceholder = "Search by name, brand, service, city…"
+    override val anyBrand = "Any brand"
+    override val anyService = "Any service"
+    override val anyCity = "Any city"
+    override val anyDistrict = "Any district"
+    override val anyRating = "Any"
+    override val ratingStars = "+ stars"
+    override val verifiedOnly = "Verified only"
+    override val applyFilters = "Apply filters"
+
+    override val catalogTitle = "Mechanic catalog"
+    override val catalogSubtitle = "matching your filters"
+    override val catalogEmptyTitle = "No mechanics found"
+    override val catalogEmptyBody = "Adjust the filters or clear the model field for broader brand-level matches."
     override val sortNearest = "Nearest"
     override val sortRating = "Top rated"
     override val sortExperience = "Most experience"
-    override fun fallbackNoBrand(brand: String, spec: String) =
-        "No $brand specialists for ${spec.lowercase()} nearby. Showing other ${spec.lowercase()} craftsmen."
-    override val noMatch = "No craftsmen match your filters."
-    override val resetFilters = "Reset filters"
+
+    override val cardCall = "Call"
+    override val cardWhatsapp = "WhatsApp"
+    override val cardViewProfile = "View profile"
     override val openNow = "Open now"
     override val closed = "Closed"
-    override val craftsmenSuffix = "CRAFTSMEN"
     override val expSuffix = "y exp"
 
-    override val minRating = "Minimum rating"
-    override val yearsExp = "Years of experience"
-    override fun maxDistanceLabel(km: Int) = "Max distance: $km km"
-    override val maxPrice = "Max price"
-    override val availableToday = "Available today"
-    override val reset = "Reset"
-    override val applyFilters = "Apply filters"
-    override val any = "Any"
-    override fun yrsLabel(n: Int) = "$n+ yrs"
+    override val badgeVerified = "Verified"
+    override val badgeUnverified = "Unverified"
 
     override val about = "About"
     override val specialties = "Specialties"
@@ -314,71 +453,67 @@ object EnglishStrings : Strings {
     override val contactWhatsapp = "WhatsApp"
     override val contactAddress = "Address"
     override val contactHours = "Hours"
-    override val bookAppointment = "Book appointment"
+    override val openInMaps = "Open in maps"
+    override val directions = "Directions"
+    override val detailReviewsCount = "reviews"
 
     override val reviewsTitle = "Reviews"
-    override val reviewsSuffix = "REVIEWS"
 
     override val nearby = "NEARBY"
+    override val mapViewList = "List"
+    override val mapViewMap = "Map"
 
-    override val bookSlot = "Book a slot"
-    override val diagnosticSuffix = "DIAGNOSTIC"
-    override val pickDate = "Pick a date"
-    override val pickTime = "Pick a time"
-    override val describeIssue = "Describe the issue (optional)"
-    override val issuePlaceholder = "E.g. car shudders at idle, check engine light on for 2 days..."
-    override fun confirmAt(day: String, time: String) = "Confirm $day $time"
-    override val pickTimeSlot = "Pick a time slot"
+    override val shopsTitle = "Car Parts Shops"
+    override val shopsSubtitle = "Find spare parts, tires, accessories and more."
+    override val shopsEmptyTitle = "No shops found"
+    override val shopsEmptyBody = "Try a different category or city."
+    override val shopCategory = "Category"
+    override val shopAnyCategory = "Any category"
+    override val shopVisitWebsite = "Visit website"
+    override fun shopCategoryName(id: String) = when (id) {
+        "spare_parts" -> "Spare parts"
+        "tires" -> "Tires"
+        "electronics" -> "Electronics"
+        "accessories" -> "Accessories"
+        "lubricants" -> "Lubricants"
+        "tools" -> "Tools"
+        else -> "Other"
+    }
 
-    override val booked = "You're booked."
-    override fun bookedSubtitle(name: String) =
-        "$name will see you Wednesday at 11:00 AM. We sent a confirmation to your phone."
-    override val confirmDateTime = "WED 29 APR · 11:00 AM"
-    override val backToHome = "Back to home"
+    override val garageTitle = "My Garage"
+    override val garageSubtitle = "Save your cars to personalise the catalog and profile pages."
+    override val garageAdd = "Add a vehicle"
+    override val garageEmptyTitle = "No saved vehicles yet"
+    override val garageEmptyBody = "Add your car so we can pre-filter the catalog and highlight mechanics who work on it."
+    override val garageBrand = "Brand"
+    override val garageModel = "Model"
+    override val garageYear = "Year"
+    override val garageNickname = "Nickname"
+    override val garageNicknamePlaceholder = "e.g. Daily driver"
+    override val garageSave = "Save vehicle"
+    override val garageDelete = "Delete"
+    override val garageLoginRequired = "Login to manage your saved vehicles."
+
     override val done = "Done"
+    override val cancel = "Cancel"
 
     override val tabHome = "Home"
-    override val tabShop = "Shop"
-    override val tabSettings = "Settings"
+    override val tabShops = "Shops"
+    override val tabGarage = "Garage"
+    override val tabProfile = "Profile"
 
-    override val settingsTitle = "Settings"
-    override val settingsAccountSection = "Account"
-    override val settingsRoleLabel = "Role"
-    override val settingsLogoutAction = "Sign out"
-    override val settingsLogoutConfirmTitle = "Sign out?"
-    override val settingsLogoutConfirmMessage = "You'll need to sign in again to use the app."
-    override val settingsCancel = "Cancel"
-    override fun settingsRole(role: String) = when (role) {
+    override val profileTitle = "Profile"
+    override val profileAccountSection = "Account"
+    override val profileRoleLabel = "Role"
+    override val profileLogoutAction = "Sign out"
+    override val profileLogoutConfirmTitle = "Sign out?"
+    override val profileLogoutConfirmMessage = "You'll need to sign in again to use the app."
+    override fun profileRole(role: String) = when (role) {
         "user" -> "Customer"
         "mechanic" -> "Mechanic"
         "admin" -> "Admin"
         else -> role.replaceFirstChar { it.uppercase() }
     }
-
-    override val shopTitle1 = "Find parts"
-    override val shopTitle2 = "and connect with sellers."
-    override val shopSearchPlaceholder = "Search parts, brand, or seller"
-    override val partsCategoryAll = "All"
-    override val noPartsMatch = "No parts match your search."
-    override val resetSearch = "Clear search"
-    override val partsCount = "PARTS"
-    override val outOfStock = "Out of stock"
-    override val inStockLabel = "In stock"
-    override fun fitsLabel(brand: String) = "Fits $brand"
-    override val fitsAnyLabel = "Universal fit"
-    override fun conditionLabel(condition: String) = when (condition) {
-        "New" -> "New"
-        "Used" -> "Used"
-        "Refurbished" -> "Refurbished"
-        else -> condition
-    }
-    override val sellerSection = "Seller"
-    override val partAboutSection = "About this part"
-    override val callSeller = "Call"
-    override val whatsappSeller = "WhatsApp"
-    override val chatSeller = "Message"
-    override fun ratingShort(rating: Double) = rating.toString()
-
 
     override fun specialtyName(id: String) = when (id) {
         "engine" -> "Engine"
@@ -396,34 +531,17 @@ object EnglishStrings : Strings {
         else -> id
     }
 
-    override fun specialtyDesc(id: String) = when (id) {
-        "engine" -> "Combustion, timing, head gasket"
-        "gearbox" -> "Manual, automatic, CVT"
-        "electrical" -> "Wiring, ECU, sensors, battery"
-        "radiator" -> "Radiator, thermostat, pumps"
-        "brakes" -> "Pads, rotors, ABS, hydraulics"
-        "suspension" -> "Shocks, struts, alignment"
-        "exhaust" -> "Muffler, catalytic, manifolds"
-        "aircon" -> "Compressor, refrigerant, vents"
-        "bodywork" -> "Dent repair, paint, panels"
-        "tires" -> "Mounting, balancing, TPMS"
-        "diagnostic" -> "OBD-II, computer scan, diagnosis"
-        "ev" -> "High-voltage systems, battery"
-        else -> ""
-    }
-
     override fun country(name: String) = name
 }
 
 object GeorgianStrings : Strings {
     override val appName = "AutoFix"
-    override val brandTagline = "ხელოსნები შენი მანქანისთვის"
-    override val location = "აღმოსავლეთი"
+    override val brandTagline = "სანდო ქართველი მექანიკოსები ერთ სივრცეში"
 
-    override val splashTagline = "ხელოსნები შენი მანქანისთვის"
+    override val splashTagline = "სანდო ქართველი მექანიკოსები ერთ სივრცეში"
 
     override val loginTitle = "კეთილი იყოს დაბრუნება"
-    override val loginSubtitle = "გაიარე ავტორიზაცია გასაგრძელებლად"
+    override val loginSubtitle = "შედი, რომ მართო შეფასებები და გარაჟი."
     override val emailLabel = "ელფოსტა"
     override val emailPlaceholder = "you@example.com"
     override val passwordLabel = "პაროლი"
@@ -442,20 +560,20 @@ object GeorgianStrings : Strings {
     override val resetNewPasswordPlaceholder = "მინიმუმ 8 სიმბოლო"
     override val resetConfirmAction = "პაროლის აღდგენა"
     override val resetDemoNote = "დემო რეჟიმი: კოდი წინასწარ ჩაწერილია."
-    override val noAccountQuestion = "არ გაქვს ანგარიში?"
+    override val noAccountQuestion = "ახალი ხარ აქ?"
     override val registerCta = "ანგარიშის შექმნა"
     override val orDivider = "ან"
 
     override val registerPickerTitle = "შემოუერთდი AutoFix-ს"
     override val registerPickerSubtitle = "აირჩიე ანგარიშის ტიპი"
     override val roleUserTitle = "ვარ მანქანის მფლობელი"
-    override val roleUserSubtitle = "იპოვე სანდო ხელოსნები"
-    override val roleMechanicTitle = "ვარ ხელოსანი"
-    override val roleMechanicSubtitle = "მიიღე შეკვეთები და გაზარდე სახელოსნო"
+    override val roleUserSubtitle = "იპოვე და შეაფასე სანდო მექანიკოსები"
+    override val roleMechanicTitle = "ვარ მექანიკოსი"
+    override val roleMechanicSubtitle = "დაარეგისტრირე ბიზნესი კატალოგში"
 
     override val registerUserTitle = "მომხმარებლის ანგარიში"
-    override val registerMechanicTitle = "ხელოსნის ანგარიში"
-    override val registerUserSubtitle = "მოგვიყევი ცოტა შენ შესახებ"
+    override val registerMechanicTitle = "მექანიკოსის ანგარიში"
+    override val registerUserSubtitle = "დაათვალიერე კატალოგი და შეინახე გარაჟი"
     override val registerMechanicSubtitle = "დაამატე შენი სახელოსნოს დეტალები"
     override val fullNameLabel = "სახელი და გვარი"
     override val fullNamePlaceholder = "შენი სახელი"
@@ -476,46 +594,119 @@ object GeorgianStrings : Strings {
     override val createAccountAction = "ანგარიშის შექმნა"
     override val haveAccountQuestion = "უკვე გაქვს ანგარიში?"
     override val loginCta = "შესვლა"
+    override val emailInvalid = "ელფოსტა არასწორი ფორმატის ჩანს."
+    override val passwordHint = "მინიმუმ 8 სიმბოლო."
+    override val pwStrengthWeak = "სუსტი — დაამატე სიგრძე და მრავალფეროვნება."
+    override val pwStrengthFair = "საშუალო — შეურიე ასოები, ციფრები და სიმბოლო."
+    override val pwStrengthGood = "კარგი — საიმედო არჩევანი."
+    override val pwStrengthStrong = "ძლიერი — მშვენიერია."
+    override val registerTermsNotice =
+        "ანგარიშის შექმნით ეთანხმები პირობებს და აცნობიერებ, რომ ეს სადემონსტრაციო პროექტია."
 
-    override val homeTitle1 = "იპოვეთ ხელოსანი"
-    override val homeTitle2 = "რომელმაც იცის თქვენი მანქანა."
-    override val searchPlaceholder = "მოძებნეთ ბრენდი ან მოდელი"
-    override val pickBrand = "აირჩიეთ მანქანის ბრენდი"
-    override val dontSeeBrand = "ვერ ხედავთ თქვენს ბრენდს?"
-    override val addManually = "+ დაამატეთ ხელით"
+    override val continueAsGuest = "გაგრძელება სტუმრად"
+    override val guestModeTitle = "ათვალიერებ როგორც სტუმარი"
+    override val guestModeBody =
+        "შედი ან შექმენი ანგარიში, რომ შეინახო გარაჟი, დატოვო შეფასებები და მართო პროფილი."
 
-    override val specQuestion = "რა პრობლემაა?"
-    override val forYour = "თქვენი"
-    override val estPrefix = "დაარს."
-    override val change = "შეცვლა"
-    override val pickSpecialty = "აირჩიეთ სპეციალობა"
-    override val selectSpecialty = "აირჩიეთ სპეციალობა"
-    override val jobsDone = "შესრულებული"
-    override fun findCraftsmenFor(spec: String) = "იპოვეთ ხელოსნები — $spec"
+    override val dashTitle = "მექანიკოსის პანელი"
+    override val dashNotMechanic = "ეს პანელი ხელმისაწვდომია მხოლოდ მექანიკოსის ანგარიშებისთვის."
+    override val dashLoginRequired = "მექანიკოსის პანელისთვის საჭიროა ავტორიზაცია."
+    override val dashEditProfile = "პროფილის რედაქტირება"
+    override val dashViewPublic = "საჯარო პროფილის ნახვა"
+    override val dashSaveProfile = "პროფილის შენახვა"
+    override val dashSaving = "ინახება…"
+    override val dashAwaitingVerification = "ველოდებით ვერიფიკაციას"
+    override val dashNoProfile = "მექანიკოსის პროფილი ჯერ არ არის."
+    override val dashCreateProfileTitle = "პროფილი ჯერ არ შექმნილა"
+    override val dashCreateProfileBody = "შეავსე პროფილი და გამოჩნდები კატალოგში."
+    override val dashStatRating = "რეიტინგი"
+    override val dashStatReviews = "შეფასებები"
+    override val dashStatSpecs = "სპეციალიზაცია"
+    override val dashStatStatus = "სტატუსი"
+    override val dashSectionBusiness = "ბიზნესი"
+    override val dashSectionLocation = "მდებარეობა"
+    override val dashSectionServices = "სერვისები და მანქანები"
+    override val dashBusinessName = "ბიზნესის სახელი"
+    override val dashDescription = "აღწერა"
+    override val dashDescriptionPlaceholder =
+        "უამბე მომხმარებელს რა გამოგდის საუკეთესოდ — ბრენდები, საათები, ყველაფერი რაც ნდობას აწვება."
+    override val dashPhone = "ტელეფონი"
+    override val dashWhatsapp = "WhatsApp"
+    override val dashCity = "ქალაქი"
+    override val dashDistrict = "უბანი"
+    override val dashAddress = "მისამართი"
+    override val dashSelectCity = "აირჩიე ქალაქი…"
+    override val dashSelectDistrict = "აირჩიე უბანი"
+    override val dashLocationPin = "მონიშნე შენი მდებარეობა რუკაზე"
+    override val dashUseMyLocation = "ჩემი ლოკაცია"
+    override val dashClearPin = "პინის წაშლა"
+    override val dashClickToPin = "დააკლიკე რუკაზე პინის დასადებად"
+    override val dashLocationNotSet = "მდებარეობის პინი ჯერ არ არის მონიშნული."
+    override val dashBrand = "ბრენდი"
+    override val dashAllBrands = "ყველა ბრენდი"
+    override val dashAllModels = "ყველა მოდელი"
+    override val dashAllServices = "ყველა სერვისი"
+    override val dashService = "სერვისი"
+    override val dashSpecsEmpty = "ჯერ არ არის სპეციალიზაციები. დაამატე ერთი მაინც."
+    override val dashCompleteness = "პროფილის შევსებულობა"
+    override val dashTipsTitle = "რჩევები ძლიერი პროფილისთვის"
+    override val dashTip1 = "დაამატე ნათელი აღწერა — რით განსხვავდები სხვებისგან?"
+    override val dashTip2 = "მონიშნე ზუსტი მდებარეობა, რომ მომხმარებელმა გიპოვოს."
+    override val dashTip3 = "ჩამოწერე ყველა ბრენდი რომელზეც მუშაობ."
+    override val dashRecentReviews = "ბოლო შეფასებები"
+    override val dashReviewsAppearHere = "შეფასებები აქ გამოჩნდება."
+    override val dashProfileSaved = "პროფილი შენახულია."
+    override val dashSaveError = "პროფილის შენახვა ვერ მოხერხდა. შეამოწმე სავალდებულო ველები და სპეციალიზაციები."
+    override val dashIncompleteSpec = "ყოველ სპეციალიზაციას სჭირდება ბრენდიც და სერვისიც. შეასწორე ან წაშალე მონიშნული სტრიქონები."
+
+    override val homeEyebrow = "სანდო ქართველი მექანიკოსები ერთ სივრცეში"
+    override val homeTitleA = "შეაკეთე მანქანა მექანიკოსთან,"
+    override val homeTitleB = "რომელსაც ენდობი."
+    override val homeSubtitle = "მოძებნე ბრენდის, მოდელის, სერვისის, უბნისა და რეიტინგის მიხედვით."
+    override val homeBrowseCatalog = "კატალოგი"
+    override val statMechanics = "მექანიკოსი"
+    override val statBrands = "ბრენდი"
+    override val statAvgRating = "საშ. რეიტინგი"
+    override val valueVerifiedTitle = "ვერიფიცირებული პროფილები"
+    override val valueVerifiedBody = "ადმინი ხელით ამოწმებს მექანიკოსებს მწვანე ნიშნის მინიჭებამდე."
+    override val valueReviewsTitle = "ნამდვილი შეფასებები"
+    override val valueReviewsBody = "ერთი შეფასება ერთ მექანიკოსზე ერთ მომხმარებელზე."
+    override val valueFeesTitle = "ფარული გადასახადების გარეშე"
+    override val valueFeesBody = "კატალოგი სამუდამოდ უფასოა. მექანიკოსი იღებს თანხის 100%-ს."
+    override val featuredChip = "რჩეული"
+    override val featuredTitle = "ტოპ ვერიფიცირებული მექანიკოსები"
+    override val featuredSubtitle = "ფილტრი: თბილისი."
+    override val featuredViewAll = "ყველას ნახვა"
 
     override val filters = "ფილტრები"
+    override val filtersReset = "გასუფთავება"
+    override val searchPlaceholder = "ძებნა სახელით, ბრენდით, სერვისით, ქალაქით…"
+    override val anyBrand = "ნებისმიერი ბრენდი"
+    override val anyService = "ნებისმიერი სერვისი"
+    override val anyCity = "ნებისმიერი ქალაქი"
+    override val anyDistrict = "ნებისმიერი უბანი"
+    override val anyRating = "ნებისმიერი"
+    override val ratingStars = "+ ვარსკვლავი"
+    override val verifiedOnly = "მხოლოდ ვერიფიცირებული"
+    override val applyFilters = "გამოყენება"
+
+    override val catalogTitle = "მექანიკოსების კატალოგი"
+    override val catalogSubtitle = "ფილტრის შესაბამისად"
+    override val catalogEmptyTitle = "მექანიკოსები ვერ მოიძებნა"
+    override val catalogEmptyBody = "შეცვალე ფილტრები ან გაასუფთავე მოდელის ველი."
     override val sortNearest = "უახლოესი"
     override val sortRating = "ტოპ რეიტინგი"
     override val sortExperience = "გამოცდილება"
-    override fun fallbackNoBrand(brand: String, spec: String) =
-        "$brand-ის სპეციალისტები ($spec) ახლოს არ მოიძებნა. ნაჩვენებია სხვა ხელოსნები."
-    override val noMatch = "ფილტრებს არცერთი ხელოსანი არ ემთხვევა."
-    override val resetFilters = "ფილტრების გასუფთავება"
+
+    override val cardCall = "ზარი"
+    override val cardWhatsapp = "WhatsApp"
+    override val cardViewProfile = "პროფილი"
     override val openNow = "ღიაა"
-    override val closed = "დახურული"
-    override val craftsmenSuffix = "ხელოსანი"
+    override val closed = "დახურულია"
     override val expSuffix = "წ. გამოც."
 
-    override val minRating = "მინ. რეიტინგი"
-    override val yearsExp = "გამოცდილება (წელი)"
-    override fun maxDistanceLabel(km: Int) = "მაქს. მანძილი: $km კმ"
-    override val maxPrice = "მაქს. ფასი"
-    override val availableToday = "ხელმისაწვდომია დღეს"
-    override val reset = "გასუფთავება"
-    override val applyFilters = "გამოყენება"
-    override val any = "ნებისმიერი"
-    override fun yrsLabel(n: Int) = "$n+ წელი"
-    override val done = "მზადაა"
+    override val badgeVerified = "ვერიფიცირებული"
+    override val badgeUnverified = "არავერიფიცირებული"
 
     override val about = "შესახებ"
     override val specialties = "სპეციალობები"
@@ -525,74 +716,72 @@ object GeorgianStrings : Strings {
     override fun seeAll(n: Int) = "ნახე ყველა ($n)"
     override val statRating = "რეიტინგი"
     override val statTrade = "გამოცდილება"
-    override val statKm = "კილომეტრი"
+    override val statKm = "კმ"
     override val contactPhone = "ტელეფონი"
     override val contactWhatsapp = "WhatsApp"
     override val contactAddress = "მისამართი"
     override val contactHours = "სამუშაო საათები"
-    override val bookAppointment = "ჯავშნა"
+    override val openInMaps = "რუკაზე გახსნა"
+    override val directions = "მიმართულებები"
+    override val detailReviewsCount = "შეფასება"
 
     override val reviewsTitle = "შეფასებები"
-    override val reviewsSuffix = "შეფასება"
 
     override val nearby = "ახლოს"
+    override val mapViewList = "სია"
+    override val mapViewMap = "რუკა"
 
-    override val bookSlot = "ჯავშნა"
-    override val diagnosticSuffix = "დიაგნოსტიკა"
-    override val pickDate = "აირჩიეთ თარიღი"
-    override val pickTime = "აირჩიეთ დრო"
-    override val describeIssue = "აღწერეთ პრობლემა (არასავალდებულო)"
-    override val issuePlaceholder = "მაგ. მანქანა ცარიელ სვლაზე ცახცახებს, ძრავის ნათურა ანთია 2 დღეა..."
-    override fun confirmAt(day: String, time: String) = "დადასტურება — $day $time"
-    override val pickTimeSlot = "აირჩიეთ დრო"
+    override val shopsTitle = "სათადარიგო ნაწილების მაღაზიები"
+    override val shopsSubtitle = "იპოვე ნაწილები, საბურავები, აქსესუარები და სხვა."
+    override val shopsEmptyTitle = "მაღაზია ვერ მოიძებნა"
+    override val shopsEmptyBody = "სცადე სხვა კატეგორია ან ქალაქი."
+    override val shopCategory = "კატეგორია"
+    override val shopAnyCategory = "ნებისმიერი"
+    override val shopVisitWebsite = "ვებსაიტი"
+    override fun shopCategoryName(id: String) = when (id) {
+        "spare_parts" -> "სათადარიგო ნაწილები"
+        "tires" -> "საბურავები"
+        "electronics" -> "ელექტრონიკა"
+        "accessories" -> "აქსესუარები"
+        "lubricants" -> "ზეთი / სმაზე"
+        "tools" -> "ინსტრუმენტები"
+        else -> "სხვა"
+    }
 
-    override val booked = "თქვენ დაჯავშნეთ."
-    override fun bookedSubtitle(name: String) =
-        "$name შეგხვდებათ ოთხშაბათს 11:00-ზე. დადასტურება გამოგიგზავნეთ თქვენს ტელეფონზე."
-    override val confirmDateTime = "ოთხ 29 აპრ · 11:00"
-    override val backToHome = "მთავარზე დაბრუნება"
+    override val garageTitle = "ჩემი გარაჟი"
+    override val garageSubtitle = "შეინახე მანქანები და კატალოგი თავად მოგერგება."
+    override val garageAdd = "მანქანის დამატება"
+    override val garageEmptyTitle = "შენახული მანქანები ჯერ არ არის"
+    override val garageEmptyBody = "დაამატე შენი მანქანა, რომ კატალოგი თავად მოგერგოს."
+    override val garageBrand = "ბრენდი"
+    override val garageModel = "მოდელი"
+    override val garageYear = "წელი"
+    override val garageNickname = "მეტსახელი"
+    override val garageNicknamePlaceholder = "მაგ. ყოველდღიური"
+    override val garageSave = "შენახვა"
+    override val garageDelete = "წაშლა"
+    override val garageLoginRequired = "შესვლა საჭიროა გარაჟის სამართავად."
+
+    override val done = "მზადაა"
+    override val cancel = "გაუქმება"
 
     override val tabHome = "მთავარი"
-    override val tabShop = "მაღაზია"
-    override val tabSettings = "პარამეტრები"
+    override val tabShops = "მაღაზიები"
+    override val tabGarage = "გარაჟი"
+    override val tabProfile = "პროფილი"
 
-    override val settingsTitle = "პარამეტრები"
-    override val settingsAccountSection = "ანგარიში"
-    override val settingsRoleLabel = "როლი"
-    override val settingsLogoutAction = "გასვლა"
-    override val settingsLogoutConfirmTitle = "გავიდე ანგარიშიდან?"
-    override val settingsLogoutConfirmMessage = "აპლიკაციის გამოყენებისთვის მოგიწევს ხელახლა შესვლა."
-    override val settingsCancel = "გაუქმება"
-    override fun settingsRole(role: String) = when (role) {
+    override val profileTitle = "პროფილი"
+    override val profileAccountSection = "ანგარიში"
+    override val profileRoleLabel = "როლი"
+    override val profileLogoutAction = "გასვლა"
+    override val profileLogoutConfirmTitle = "გავიდე ანგარიშიდან?"
+    override val profileLogoutConfirmMessage = "აპლიკაციის გამოყენებისთვის ხელახლა შესვლა მოგიწევს."
+    override fun profileRole(role: String) = when (role) {
         "user" -> "მომხმარებელი"
-        "mechanic" -> "ხელოსანი"
+        "mechanic" -> "მექანიკოსი"
         "admin" -> "ადმინი"
         else -> role
     }
-
-    override val shopTitle1 = "იპოვე ნაწილები"
-    override val shopTitle2 = "და დაუკავშირდი გამყიდველს."
-    override val shopSearchPlaceholder = "მოძებნე ნაწილი, ბრენდი ან გამყიდველი"
-    override val partsCategoryAll = "ყველა"
-    override val noPartsMatch = "ნაწილები ვერ მოიძებნა."
-    override val resetSearch = "ძიების გასუფთავება"
-    override val partsCount = "ნაწილი"
-    override val outOfStock = "არ არის მარაგში"
-    override val inStockLabel = "მარაგშია"
-    override fun fitsLabel(brand: String) = "ერგება $brand-ს"
-    override val fitsAnyLabel = "ნებისმიერ მოდელზე"
-    override fun conditionLabel(condition: String) = when (condition) {
-        "New" -> "ახალი"
-        "Used" -> "მეორადი"
-        "Refurbished" -> "აღდგენილი"
-        else -> condition
-    }
-    override val sellerSection = "გამყიდველი"
-    override val partAboutSection = "ნაწილის შესახებ"
-    override val callSeller = "ზარი"
-    override val whatsappSeller = "WhatsApp"
-    override val chatSeller = "მესიჯი"
-    override fun ratingShort(rating: Double) = rating.toString()
 
     override fun specialtyName(id: String) = when (id) {
         "engine" -> "ძრავი"
@@ -608,22 +797,6 @@ object GeorgianStrings : Strings {
         "diagnostic" -> "დიაგნოსტიკა"
         "ev" -> "ელექტრომობილი"
         else -> id
-    }
-
-    override fun specialtyDesc(id: String) = when (id) {
-        "engine" -> "წვა, ლილვის დრო, თავის შუასადებელი"
-        "gearbox" -> "მექანიკა, ავტომატი, CVT"
-        "electrical" -> "გაყვანილობა, ECU, სენსორები, ბატარეა"
-        "radiator" -> "რადიატორი, თერმოსტატი, ტუმბოები"
-        "brakes" -> "ხუნდები, დისკები, ABS, ჰიდრავლიკა"
-        "suspension" -> "ამორტიზატორი, სკიდი, განკუთვნება"
-        "exhaust" -> "ხმაუროვა, კატალიზატორი, კოლექტორი"
-        "aircon" -> "კომპრესორი, ფრეონი, ვენტილაცია"
-        "bodywork" -> "ჩაღრმავება, საღებავი, პანელები"
-        "tires" -> "მონტაჟი, ბალანსი, TPMS"
-        "diagnostic" -> "OBD-II, კომპიუტერული სკანი"
-        "ev" -> "მაღალი ძაბვა, ბატარეა"
-        else -> ""
     }
 
     override fun country(name: String) = when (name) {
@@ -646,7 +819,7 @@ fun stringsFor(lang: AppLanguage): Strings = when (lang) {
 }
 
 val LocalStrings = staticCompositionLocalOf<Strings> { EnglishStrings }
-val LocalLanguage = staticCompositionLocalOf { AppLanguage.EN }
+val LocalLanguage = staticCompositionLocalOf { AppLanguage.KA }
 val LocalToggleLanguage = staticCompositionLocalOf<() -> Unit> { {} }
 
 

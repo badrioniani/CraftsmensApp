@@ -17,6 +17,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,8 +27,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.example.project.data.Mechanic
-import org.example.project.data.REVIEWS
-import org.example.project.data.SYNTHETIC_REVIEWS
+import org.example.project.data.Review
+import org.example.project.data.mechanics.MechanicApi
+import org.example.project.data.mechanics.toUiModel
 import org.example.project.ui.components.ScreenHeader
 import org.example.project.ui.components.Stars
 import org.example.project.ui.i18n.LocalStrings
@@ -34,13 +38,19 @@ import org.example.project.ui.theme.CraftsmenColors
 @Composable
 fun ReviewsScreen(theme: CraftsmenColors, mech: Mechanic, onBack: () -> Unit) {
     val s = LocalStrings.current
-    val reviews = REVIEWS.filter { it.mechId == mech.id } + SYNTHETIC_REVIEWS
+    val reviewApi = remember { MechanicApi() }
+    val reviews by produceState(initialValue = emptyList<Review>(), mech.id) {
+        val id = mech.id.toIntOrNull()
+        value = if (id != null) {
+            runCatching { reviewApi.reviews(id).results.map { it.toUiModel(mech.id) } }.getOrDefault(emptyList())
+        } else emptyList()
+    }
 
     Column(modifier = Modifier.fillMaxSize().background(theme.bg)) {
         ScreenHeader(
             theme = theme,
             title = s.reviewsTitle,
-            subtitle = "${mech.name.uppercase()} · ${mech.reviews} ${s.reviewsSuffix}",
+            subtitle = "${mech.name.uppercase()} · ${mech.reviews} ${s.detailReviewsCount}",
             onBack = onBack,
         )
 
@@ -78,43 +88,10 @@ private fun RatingSummary(theme: CraftsmenColors, mech: Mechanic) {
             Stars(rating = mech.rating, size = 14.dp, theme = theme)
             Spacer(Modifier.height(6.dp))
             Text(
-                text = "${mech.reviews} ${s.reviewsSuffix}",
+                text = "${mech.reviews} ${s.detailReviewsCount}",
                 color = theme.textMute,
                 fontSize = 11.sp,
             )
-        }
-        Column(
-            modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-        ) {
-            listOf(5 to 78, 4 to 16, 3 to 4, 2 to 1, 1 to 1).forEach { (s, pct) ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    Text(text = s.toString(), color = theme.textDim, fontSize = 11.sp, modifier = Modifier.width(8.dp))
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(4.dp)
-                            .clip(RoundedCornerShape(2.dp))
-                            .background(theme.border),
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth(pct / 100f)
-                                .height(4.dp)
-                                .background(theme.accent),
-                        )
-                    }
-                    Text(
-                        text = "$pct%",
-                        color = theme.textMute,
-                        fontSize = 10.sp,
-                        modifier = Modifier.width(30.dp),
-                    )
-                }
-            }
         }
     }
 }

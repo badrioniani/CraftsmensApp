@@ -99,9 +99,10 @@ fun ForgotPasswordScreen(
         Spacer(Modifier.height(20.dp))
         AppButton(
             theme = theme,
-            text = if (busy) "..." else s.forgotSendCodeAction,
+            text = s.forgotSendCodeAction,
             onClick = { onSendCode(email) },
             enabled = canSubmit,
+            busy = busy,
         )
     }
 }

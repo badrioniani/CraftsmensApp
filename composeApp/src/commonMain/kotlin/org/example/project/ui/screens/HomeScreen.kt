@@ -6,7 +6,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,114 +14,104 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
-import org.example.project.data.CAR_BRANDS
-import org.example.project.data.CarBrand
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import org.example.project.data.Mechanic
+import org.example.project.data.mechanics.MechanicListViewModel
+import org.example.project.ui.components.AppButton
 import org.example.project.ui.components.AppLogo
-import org.example.project.ui.components.MonoLabel
-import androidx.compose.ui.focus.onFocusChanged
+import org.example.project.ui.components.ButtonVariant
+import org.example.project.ui.components.MechanicCardSkeleton
+import org.example.project.ui.components.MechanicListCard
 import org.example.project.ui.i18n.LocalLanguage
-import org.example.project.ui.i18n.LocalSetInputFocused
 import org.example.project.ui.i18n.LocalStrings
 import org.example.project.ui.i18n.LocalToggleLanguage
-import org.example.project.ui.icons.IconSearch
-import org.example.project.ui.icons.IconX
+import org.example.project.ui.icons.IconShield
+import org.example.project.ui.icons.IconStar
+import org.example.project.ui.icons.IconWrench
 import org.example.project.ui.theme.CraftsmenColors
 
 @Composable
-fun HomeScreen(theme: CraftsmenColors, onPickBrand: (CarBrand) -> Unit) {
+fun HomeScreen(
+    theme: CraftsmenColors,
+    onBrowseCatalog: () -> Unit,
+    onPickMech: (Mechanic) -> Unit,
+) {
     val s = LocalStrings.current
-    var query by remember { mutableStateOf("") }
-    val filtered = CAR_BRANDS.filter {
-        it.name.contains(query, ignoreCase = true) || it.country.contains(query, ignoreCase = true)
-    }
 
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(3),
-        modifier = Modifier.fillMaxSize().background(theme.bg),
-        contentPadding = PaddingValues(horizontal = 24.dp, vertical = 0.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp),
-    ) {
-        item(span = { GridItemSpan(3) }) { HomeHeader(theme, query, { query = it }) }
-        item(span = { GridItemSpan(3) }) {
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(top = 8.dp, bottom = 4.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
+    val vm: MechanicListViewModel = viewModel { MechanicListViewModel() }
+    val listState by vm.state.collectAsStateWithLifecycle()
+    LaunchedEffect(Unit) { vm.loadAll() }
+
+    val showSkeleton = listState.loading && listState.items.isEmpty()
+    val mechs = listState.items
+    val featured = mechs.filter { it.verified }.sortedByDescending { it.rating }.take(4)
+    val totalMechs = if (showSkeleton) 0 else mechs.size
+
+    LazyColumn(modifier = Modifier.fillMaxSize().background(theme.bg)) {
+        item { HeroBlock(theme, totalMechs, onBrowseCatalog) }
+        item { ValuePropsGrid(theme) }
+        item { FeaturedHeader(theme) }
+        item {
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
-                MonoLabel(s.pickBrand, theme)
-                Text(
-                    text = "${filtered.size}/${CAR_BRANDS.size}",
-                    fontSize = 11.sp,
-                    color = theme.textMute,
-                )
-            }
-        }
-        items(filtered) { brand ->
-            BrandTile(brand, theme, onClick = { onPickBrand(brand) })
-        }
-        item(span = { GridItemSpan(3) }) {
-            Column(modifier = Modifier.fillMaxWidth().padding(top = 24.dp, bottom = 16.dp)) {
-                MonoLabel(s.dontSeeBrand, theme)
-                Spacer(Modifier.height(10.dp))
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp)
-                        .clip(RoundedCornerShape(14.dp))
-                        .border(1.dp, theme.borderStrong, RoundedCornerShape(14.dp))
-                        .clickable { },
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = s.addManually,
-                        color = theme.textDim,
-                        fontSize = 14.sp,
-                    )
+                if (showSkeleton) {
+                    repeat(4) { MechanicCardSkeleton(theme) }
+                } else {
+                    featured.forEach { m ->
+                        MechanicListCard(theme = theme, mech = m, onClick = { onPickMech(m) })
+                    }
                 }
             }
         }
+        item { Spacer(Modifier.height(20.dp)) }
+        item {
+            Box(modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp)) {
+                AppButton(
+                    theme = theme,
+                    text = s.featuredViewAll,
+                    onClick = onBrowseCatalog,
+                    variant = ButtonVariant.Secondary,
+                )
+            }
+        }
+        item { Spacer(Modifier.height(28.dp)) }
     }
 }
 
 @Composable
-private fun HomeHeader(theme: CraftsmenColors, q: String, onQ: (String) -> Unit) {
+private fun HeroBlock(theme: CraftsmenColors, total: Int, onCta: () -> Unit) {
     val s = LocalStrings.current
     val lang = LocalLanguage.current
     val toggleLang = LocalToggleLanguage.current
-    val focusManager = LocalFocusManager.current
-    val keyboardController = LocalSoftwareKeyboardController.current
-    val setInputFocused = LocalSetInputFocused.current
-    Column(modifier = Modifier.fillMaxWidth().padding(top = 48.dp)) {
+    val heroBg = if (theme.isDark)
+        Brush.verticalGradient(listOf(Color(0xFF0E0E0E), Color(0xFF1A1A1A)))
+    else
+        Brush.verticalGradient(listOf(Color(0xFF1F2A37), Color(0xFF111827)))
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(heroBg)
+            .padding(start = 24.dp, end = 24.dp, top = 48.dp, bottom = 24.dp),
+    ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -133,17 +122,16 @@ private fun HomeHeader(theme: CraftsmenColors, q: String, onQ: (String) -> Unit)
                 Spacer(Modifier.width(8.dp))
                 Text(
                     text = s.appName,
-                    color = theme.text,
+                    color = Color.White,
                     fontSize = 17.sp,
                     fontWeight = FontWeight.SemiBold,
                 )
             }
-            // Language toggle pill
             Row(
                 modifier = Modifier
                     .clip(CircleShape)
-                    .background(theme.bgRaised)
-                    .border(1.dp, theme.border, CircleShape)
+                    .background(Color.White.copy(alpha = 0.08f))
+                    .border(1.dp, Color.White.copy(alpha = 0.12f), CircleShape)
                     .clickable { toggleLang() }
                     .padding(horizontal = 12.dp, vertical = 7.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -151,135 +139,178 @@ private fun HomeHeader(theme: CraftsmenColors, q: String, onQ: (String) -> Unit)
             ) {
                 Text(
                     text = lang.display,
-                    color = theme.text,
+                    color = Color.White,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.SemiBold,
                     letterSpacing = 0.5.sp,
                 )
-                Box(
-                    modifier = Modifier
-                        .size(width = 1.dp, height = 12.dp)
-                        .background(theme.border),
-                )
+                Box(modifier = Modifier.size(width = 1.dp, height = 12.dp).background(Color.White.copy(alpha = 0.18f)))
                 Text(
                     text = if (lang.code == "en") "KA" else "EN",
-                    color = theme.textMute,
+                    color = Color.White.copy(alpha = 0.5f),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium,
                     letterSpacing = 0.5.sp,
                 )
             }
         }
-        Spacer(Modifier.height(22.dp))
-        Text(
-            text = s.homeTitle1,
-            color = theme.text,
-            fontSize = 30.sp,
-            fontWeight = FontWeight.SemiBold,
-            lineHeight = 32.sp,
-        )
-        Text(
-            text = s.homeTitle2,
-            color = theme.textDim,
-            fontSize = 30.sp,
-            fontWeight = FontWeight.SemiBold,
-            lineHeight = 32.sp,
-        )
-        Spacer(Modifier.height(18.dp))
+        Spacer(Modifier.height(28.dp))
 
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(14.dp))
-                .background(theme.bgInput)
-                .border(1.dp, theme.border, RoundedCornerShape(14.dp))
-                .padding(horizontal = 14.dp, vertical = 4.dp),
+                .clip(CircleShape)
+                .background(Color.White.copy(alpha = 0.06f))
+                .border(1.dp, Color.White.copy(alpha = 0.10f), CircleShape)
+                .padding(horizontal = 12.dp, vertical = 6.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            IconSearch(size = 18.dp, color = theme.textDim)
-            TextField(
-                value = q,
-                onValueChange = onQ,
-                placeholder = { Text(s.searchPlaceholder, color = theme.textDim) },
-                modifier = Modifier
-                    .weight(1f)
-                    .onFocusChanged { setInputFocused(it.isFocused) },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                keyboardActions = KeyboardActions(onSearch = {
-                    focusManager.clearFocus()
-                    keyboardController?.hide()
-                }),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    cursorColor = theme.accent,
-                    focusedTextColor = theme.text,
-                    unfocusedTextColor = theme.text,
-                ),
+            Box(modifier = Modifier.size(6.dp).clip(CircleShape).background(theme.accent))
+            Text(
+                text = s.homeEyebrow,
+                color = Color.White.copy(alpha = 0.85f),
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Medium,
             )
-            if (q.isNotEmpty()) {
-                Box(modifier = Modifier.clickable { onQ("") }) {
-                    IconX(size = 16.dp, color = theme.textDim)
-                }
-            }
         }
-        Spacer(Modifier.height(18.dp))
+        Spacer(Modifier.height(16.dp))
+
+        Text(
+            text = s.homeTitleA,
+            color = Color.White,
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold,
+            lineHeight = 34.sp,
+        )
+        Text(
+            text = s.homeTitleB,
+            color = theme.accent,
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold,
+            lineHeight = 34.sp,
+        )
+        Spacer(Modifier.height(12.dp))
+        Text(
+            text = s.homeSubtitle,
+            color = Color.White.copy(alpha = 0.7f),
+            fontSize = 14.sp,
+            lineHeight = 21.sp,
+        )
+
+        Spacer(Modifier.height(20.dp))
+        AppButton(
+            theme = theme,
+            text = s.homeBrowseCatalog,
+            onClick = onCta,
+        )
+        Spacer(Modifier.height(20.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            StatPair(Color.White, theme.textDim, "$total+", s.statMechanics)
+            StatPair(Color.White, theme.textDim, "30+", s.statBrands)
+            StatPair(Color.White, theme.textDim, "4.6", s.statAvgRating)
+        }
     }
 }
 
 @Composable
-private fun BrandTile(brand: CarBrand, theme: CraftsmenColors, onClick: () -> Unit) {
+private fun StatPair(fg: Color, sub: Color, value: String, label: String) {
+    Column {
+        Text(text = value, color = fg, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+        Spacer(Modifier.height(2.dp))
+        Text(
+            text = label.uppercase(),
+            color = sub,
+            fontSize = 10.sp,
+            letterSpacing = 0.7.sp,
+        )
+    }
+}
+
+@Composable
+private fun ValuePropsGrid(theme: CraftsmenColors) {
     val s = LocalStrings.current
     Column(
+        modifier = Modifier.fillMaxWidth().padding(20.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
+        ValueCard(theme, "verified", s.valueVerifiedTitle, s.valueVerifiedBody)
+        ValueCard(theme, "reviews", s.valueReviewsTitle, s.valueReviewsBody)
+        ValueCard(theme, "fees", s.valueFeesTitle, s.valueFeesBody)
+    }
+}
+
+@Composable
+private fun ValueCard(theme: CraftsmenColors, iconId: String, title: String, body: String) {
+    Row(
         modifier = Modifier
+            .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .background(theme.bgCard)
             .border(1.dp, theme.border, RoundedCornerShape(16.dp))
-            .clickable(onClick = onClick)
-            .padding(horizontal = 10.dp, vertical = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(10.dp),
+            .padding(16.dp),
+        verticalAlignment = Alignment.Top,
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Box(
             modifier = Modifier
-                .size(56.dp)
+                .size(40.dp)
                 .clip(RoundedCornerShape(12.dp))
-                .background(if (theme.isDark) Color(0xFF222222) else Color.White)
-                .border(1.5.dp, brand.color, RoundedCornerShape(12.dp)),
+                .background(theme.accentSoft),
             contentAlignment = Alignment.Center,
         ) {
-            AsyncImage(
-                model = brand.carImage,
-                contentDescription = brand.name,
-                contentScale = ContentScale.Fit,
-                modifier = Modifier.size(40.dp),
-            )
+            when (iconId) {
+                "verified" -> IconShield(size = 18.dp, color = theme.accent)
+                "reviews" -> IconStar(size = 18.dp, color = theme.accent)
+                else -> IconWrench(size = 18.dp, color = theme.accent)
+            }
         }
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(
-                text = brand.name,
-                color = theme.text,
-                fontSize = 10.sp,
-                maxLines = 1,
-                fontWeight = FontWeight.SemiBold,
-                textAlign = TextAlign.Center,
-            )
-            Text(
-                text = s.country(brand.country).uppercase(),
-                color = theme.textMute,
-                fontSize = 9.sp,
-                letterSpacing = 0.7.sp,
-            )
+        Column(modifier = Modifier.weight(1f)) {
+            Text(text = title, color = theme.text, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+            Spacer(Modifier.height(4.dp))
+            Text(text = body, color = theme.textDim, fontSize = 12.sp, lineHeight = 18.sp)
         }
     }
 }
 
-
-
-
-
-
+@Composable
+private fun FeaturedHeader(theme: CraftsmenColors) {
+    val s = LocalStrings.current
+    Column(
+        modifier = Modifier.fillMaxWidth().padding(start = 20.dp, end = 20.dp, top = 6.dp, bottom = 12.dp),
+    ) {
+        Row(
+            modifier = Modifier
+                .clip(CircleShape)
+                .background(theme.accentSoft)
+                .padding(horizontal = 10.dp, vertical = 5.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
+            IconWrench(size = 12.dp, color = theme.accent, stroke = 2f)
+            Text(
+                text = s.featuredChip,
+                color = theme.accent,
+                fontSize = 10.sp,
+                fontWeight = FontWeight.SemiBold,
+                letterSpacing = 0.7.sp,
+            )
+        }
+        Spacer(Modifier.height(10.dp))
+        Text(
+            text = s.featuredTitle,
+            color = theme.text,
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold,
+        )
+        Spacer(Modifier.height(2.dp))
+        Text(
+            text = s.featuredSubtitle,
+            color = theme.textDim,
+            fontSize = 13.sp,
+        )
+    }
+}

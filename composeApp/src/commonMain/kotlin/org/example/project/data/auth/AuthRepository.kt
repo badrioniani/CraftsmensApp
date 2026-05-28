@@ -17,16 +17,10 @@ class AuthRepository(
     }
 
     suspend fun loadCurrentUser(): UserDto? {
-        val access = storage.access() ?: return null
-        return runCatching { api.me(access) }
-            .recoverCatching {
-                if (it is AuthApiException && it.httpStatus == 401) {
-                    val refreshToken = storage.refresh() ?: throw it
-                    val refreshed = api.refresh(refreshToken)
-                    storage.save(refreshed.access, refreshToken)
-                    api.me(refreshed.access)
-                } else throw it
-            }
+        if (storage.access() == null) return null
+        // The shared client refreshes the access token on 401 automatically; if
+        // the refresh token is also dead it clears storage and the call fails.
+        return runCatching { api.me() }
             .onFailure { storage.clear() }
             .getOrNull()
     }

@@ -129,9 +129,10 @@ fun ResetPasswordScreen(
         Spacer(Modifier.height(20.dp))
         AppButton(
             theme = theme,
-            text = if (busy) "..." else s.resetConfirmAction,
+            text = s.resetConfirmAction,
             onClick = { onConfirm(email, code, newPassword) },
             enabled = canSubmit,
+            busy = busy,
         )
 
         Spacer(Modifier.height(40.dp))

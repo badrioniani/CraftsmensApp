@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.example.project.data.auth.UserDto
 import org.example.project.ui.components.AppButton
+import org.example.project.ui.components.ButtonVariant
 import org.example.project.ui.i18n.LocalStrings
 import org.example.project.ui.icons.IconMail
 import org.example.project.ui.icons.IconPhone
@@ -43,6 +44,8 @@ fun SettingsScreen(
     theme: CraftsmenColors,
     user: UserDto?,
     onLogout: () -> Unit,
+    onOpenDashboard: (() -> Unit)? = null,
+    onSignIn: (() -> Unit)? = null,
 ) {
     val s = LocalStrings.current
     var confirming by remember { mutableStateOf(false) }
@@ -56,7 +59,7 @@ fun SettingsScreen(
     ) {
         Spacer(Modifier.height(48.dp))
         Text(
-            text = s.settingsTitle,
+            text = s.profileTitle,
             color = theme.text,
             fontSize = 30.sp,
             fontWeight = FontWeight.SemiBold,
@@ -64,20 +67,40 @@ fun SettingsScreen(
         )
 
         Spacer(Modifier.height(24.dp))
-        SectionLabel(theme, s.settingsAccountSection)
+        SectionLabel(theme, s.profileAccountSection)
 
         Spacer(Modifier.height(10.dp))
-        ProfileCard(theme = theme, user = user, roleLabel = s.settingsRoleLabel) { roleKey ->
-            s.settingsRole(roleKey)
-        }
+        if (user == null) {
+            GuestCard(theme)
+            Spacer(Modifier.height(20.dp))
+            AppButton(
+                theme = theme,
+                text = s.loginCta,
+                onClick = { onSignIn?.invoke() },
+            )
+        } else {
+            ProfileCard(theme = theme, user = user, roleLabel = s.profileRoleLabel) { roleKey ->
+                s.profileRole(roleKey)
+            }
 
-        Spacer(Modifier.height(28.dp))
-        AppButton(
-            theme = theme,
-            text = s.settingsLogoutAction,
-            onClick = { confirming = true },
-            enabled = true,
-        )
+            if (user.role == "mechanic" && onOpenDashboard != null) {
+                Spacer(Modifier.height(20.dp))
+                AppButton(
+                    theme = theme,
+                    text = s.dashTitle,
+                    onClick = onOpenDashboard,
+                    variant = ButtonVariant.Secondary,
+                )
+            }
+
+            Spacer(Modifier.height(28.dp))
+            AppButton(
+                theme = theme,
+                text = s.profileLogoutAction,
+                onClick = { confirming = true },
+                enabled = true,
+            )
+        }
 
         Spacer(Modifier.height(40.dp))
     }
@@ -85,15 +108,54 @@ fun SettingsScreen(
     if (confirming) {
         ConfirmDialog(
             theme = theme,
-            title = s.settingsLogoutConfirmTitle,
-            message = s.settingsLogoutConfirmMessage,
-            confirmText = s.settingsLogoutAction,
-            cancelText = s.settingsCancel,
+            title = s.profileLogoutConfirmTitle,
+            message = s.profileLogoutConfirmMessage,
+            confirmText = s.profileLogoutAction,
+            cancelText = s.cancel,
             onConfirm = {
                 confirming = false
                 onLogout()
             },
             onCancel = { confirming = false },
+        )
+    }
+}
+
+@Composable
+private fun GuestCard(theme: CraftsmenColors) {
+    val s = LocalStrings.current
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
+            .background(theme.bgCard)
+            .border(1.dp, theme.border, RoundedCornerShape(16.dp))
+            .padding(20.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .clip(CircleShape)
+                    .background(theme.accentSoft),
+                contentAlignment = Alignment.Center,
+            ) {
+                IconUser(size = 22.dp, color = theme.accent)
+            }
+            Spacer(Modifier.size(12.dp))
+            Text(
+                text = s.guestModeTitle,
+                color = theme.text,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
+            )
+        }
+        Text(
+            text = s.guestModeBody,
+            color = theme.textDim,
+            fontSize = 13.sp,
+            lineHeight = 19.sp,
         )
     }
 }
@@ -156,8 +218,9 @@ private fun ProfileCard(
         InfoRow(theme = theme, label = "Email", value = user?.email ?: "") {
             IconMail(size = 16.dp, color = theme.textDim)
         }
-        if (!user?.phone.isNullOrBlank()) {
-            InfoRow(theme = theme, label = "Phone", value = user!!.phone) {
+        val phone = user?.phone
+        if (!phone.isNullOrBlank()) {
+            InfoRow(theme = theme, label = "Phone", value = phone) {
                 IconPhone(size = 16.dp, color = theme.textDim)
             }
         }

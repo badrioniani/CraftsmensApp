@@ -26,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -37,7 +38,6 @@ import org.example.project.ui.components.AuthTextField
 import org.example.project.ui.components.IconButton40
 import org.example.project.ui.i18n.LocalStrings
 import org.example.project.ui.icons.IconBack
-import org.example.project.ui.icons.IconCheck
 import org.example.project.ui.icons.IconLock
 import org.example.project.ui.icons.IconMail
 import org.example.project.ui.icons.IconPhone
@@ -52,6 +52,19 @@ data class RegisterFormResult(
     val password: String,
     val role: UserRole,
 )
+
+private val EmailRegex = Regex("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")
+
+/** Friendly password-strength heuristic mirroring the web app. Returns 0–4. */
+private fun scorePassword(pw: String): Int {
+    if (pw.isEmpty()) return 0
+    var score = 0
+    if (pw.length >= 8) score++
+    if (pw.length >= 12) score++
+    if (pw.any { it.isLowerCase() } && pw.any { it.isUpperCase() }) score++
+    if (pw.any { it.isDigit() } && pw.any { !it.isLetterOrDigit() }) score++
+    return minOf(score, 4)
+}
 
 @Composable
 fun RegisterScreen(
@@ -70,25 +83,13 @@ fun RegisterScreen(
     var email by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
+    var emailTouched by remember { mutableStateOf(false) }
 
-    var workshop by remember { mutableStateOf("") }
-    var specialty by remember { mutableStateOf("") }
-    var experience by remember { mutableStateOf("") }
-    var city by remember { mutableStateOf("") }
+    val emailValid = EmailRegex.matches(email.trim())
+    val score = scorePassword(password)
+    val showEmailError = emailTouched && email.isNotBlank() && !emailValid
 
-    var agree by remember { mutableStateOf(false) }
-
-    val baseValid = fullName.isNotBlank()
-        && email.isNotBlank()
-        && phone.isNotBlank()
-        && password.length >= 8
-        && password == confirmPassword
-        && agree
-        && !busy
-    val canSubmit = if (isMechanic) {
-        baseValid && workshop.isNotBlank() && specialty.isNotBlank() && city.isNotBlank()
-    } else baseValid
+    val canSubmit = fullName.isNotBlank() && emailValid && password.length >= 8 && !busy
 
     val submit: () -> Unit = {
         if (canSubmit) onSubmit(
@@ -169,13 +170,21 @@ fun RegisterScreen(
         AuthTextField(
             theme = theme,
             value = email,
-            onValueChange = { email = it },
+            onValueChange = { email = it; emailTouched = true },
             placeholder = s.emailPlaceholder,
             label = s.emailLabel,
             leading = { IconMail(size = 18.dp, color = theme.textDim) },
             keyboardType = KeyboardType.Email,
             imeAction = ImeAction.Next,
         )
+        if (showEmailError) {
+            Spacer(Modifier.height(6.dp))
+            Text(
+                text = s.emailInvalid,
+                color = theme.danger,
+                fontSize = 12.sp,
+            )
+        }
 
         Spacer(Modifier.height(14.dp))
         AuthTextField(
@@ -189,57 +198,6 @@ fun RegisterScreen(
             imeAction = ImeAction.Next,
         )
 
-        if (isMechanic) {
-            Spacer(Modifier.height(14.dp))
-            AuthTextField(
-                theme = theme,
-                value = workshop,
-                onValueChange = { workshop = it },
-                placeholder = s.workshopNamePlaceholder,
-                label = s.workshopNameLabel,
-                leading = { IconWrench(size = 18.dp, color = theme.textDim, stroke = 2f) },
-                imeAction = ImeAction.Next,
-            )
-
-            Spacer(Modifier.height(14.dp))
-            AuthTextField(
-                theme = theme,
-                value = specialty,
-                onValueChange = { specialty = it },
-                placeholder = s.specialtyPlaceholder,
-                label = s.specialtyLabel,
-                imeAction = ImeAction.Next,
-            )
-
-            Spacer(Modifier.height(14.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-            ) {
-                Box(modifier = Modifier.weight(1f)) {
-                    AuthTextField(
-                        theme = theme,
-                        value = experience,
-                        onValueChange = { v -> experience = v.filter { it.isDigit() } },
-                        placeholder = s.experiencePlaceholder,
-                        label = s.experienceLabel,
-                        keyboardType = KeyboardType.Number,
-                        imeAction = ImeAction.Next,
-                    )
-                }
-                Box(modifier = Modifier.weight(1.4f)) {
-                    AuthTextField(
-                        theme = theme,
-                        value = city,
-                        onValueChange = { city = it },
-                        placeholder = s.cityPlaceholder,
-                        label = s.cityLabel,
-                        imeAction = ImeAction.Next,
-                    )
-                }
-            }
-        }
-
         Spacer(Modifier.height(14.dp))
         AuthTextField(
             theme = theme,
@@ -249,21 +207,20 @@ fun RegisterScreen(
             label = s.passwordLabel,
             leading = { IconLock(size = 18.dp, color = theme.textDim) },
             isPassword = true,
-            imeAction = ImeAction.Next,
-        )
-
-        Spacer(Modifier.height(14.dp))
-        AuthTextField(
-            theme = theme,
-            value = confirmPassword,
-            onValueChange = { confirmPassword = it },
-            placeholder = s.confirmPasswordPlaceholder,
-            label = s.confirmPasswordLabel,
-            leading = { IconLock(size = 18.dp, color = theme.textDim) },
-            isPassword = true,
             imeAction = ImeAction.Done,
             onImeAction = { submit() },
         )
+
+        Spacer(Modifier.height(10.dp))
+        if (password.isEmpty()) {
+            Text(
+                text = s.passwordHint,
+                color = theme.textMute,
+                fontSize = 12.sp,
+            )
+        } else {
+            PasswordStrengthMeter(theme = theme, score = score, strings = s)
+        }
 
         if (!errorText.isNullOrBlank()) {
             Spacer(Modifier.height(12.dp))
@@ -274,48 +231,21 @@ fun RegisterScreen(
             )
         }
 
-        Spacer(Modifier.height(20.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(22.dp)
-                    .clip(RoundedCornerShape(6.dp))
-                    .background(if (agree) theme.accent else theme.bgRaised)
-                    .border(1.dp, if (agree) theme.accent else theme.borderStrong, RoundedCornerShape(6.dp))
-                    .clickable { agree = !agree },
-                contentAlignment = Alignment.Center,
-            ) {
-                if (agree) IconCheck(size = 14.dp, color = theme.accentText, stroke = 2.5f)
-            }
-            Row(
-                modifier = Modifier.clickable { agree = !agree },
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                Text(
-                    text = s.agreeTermsPrefix,
-                    color = theme.textDim,
-                    fontSize = 13.sp,
-                )
-                Text(
-                    text = s.agreeTermsLink,
-                    color = theme.accent,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.SemiBold,
-                )
-            }
-        }
-
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(24.dp))
         AppButton(
             theme = theme,
-            text = if (busy) "..." else s.createAccountAction,
+            text = s.createAccountAction,
             onClick = submit,
             enabled = canSubmit,
+            busy = busy,
+        )
+
+        Spacer(Modifier.height(14.dp))
+        Text(
+            text = s.registerTermsNotice,
+            color = theme.textMute,
+            fontSize = 12.sp,
+            lineHeight = 17.sp,
         )
 
         Spacer(Modifier.height(20.dp))
@@ -345,5 +275,49 @@ fun RegisterScreen(
             }
         }
         Spacer(Modifier.height(32.dp))
+    }
+}
+
+@Composable
+private fun PasswordStrengthMeter(
+    theme: CraftsmenColors,
+    score: Int,
+    strings: org.example.project.ui.i18n.Strings,
+) {
+    // weak → fair → good → strong, gradient from danger to success.
+    val activeColor = when (score) {
+        0, 1 -> theme.danger
+        2 -> Color(0xFFF59E0B) // amber
+        3 -> Color(0xFF84CC16) // lime
+        else -> theme.success
+    }
+    val label = when {
+        score <= 1 -> strings.pwStrengthWeak
+        score == 2 -> strings.pwStrengthFair
+        score == 3 -> strings.pwStrengthGood
+        else -> strings.pwStrengthStrong
+    }
+
+    Column {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+            for (i in 1..4) {
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(6.dp)
+                        .clip(CircleShape)
+                        .background(if (i <= score) activeColor else theme.border),
+                )
+            }
+        }
+        Spacer(Modifier.height(6.dp))
+        Text(
+            text = label,
+            color = theme.textDim,
+            fontSize = 12.sp,
+        )
     }
 }

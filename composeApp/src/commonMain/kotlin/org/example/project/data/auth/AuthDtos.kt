@@ -10,6 +10,7 @@ data class UserDto(
     val email: String,
     val phone: String = "",
     val role: String,
+    @SerialName("email_verified") val emailVerified: Boolean = false,
     @SerialName("created_at") val createdAt: String? = null,
 )
 
@@ -21,6 +22,7 @@ data class AuthResponse(
     val user: UserDto,
     val access: String,
     val refresh: String,
+    @SerialName("email_verified") val emailVerified: Boolean = false,
 )
 
 @Serializable

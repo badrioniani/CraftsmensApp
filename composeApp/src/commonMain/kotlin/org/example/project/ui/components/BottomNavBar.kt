@@ -10,10 +10,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.navigationBars
@@ -26,12 +24,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.example.project.ui.i18n.LocalStrings
+import org.example.project.ui.icons.IconCalendar
 import org.example.project.ui.icons.IconHome
 import org.example.project.ui.icons.IconSettings
 import org.example.project.ui.icons.IconShop
+import org.example.project.ui.icons.IconUser
 import org.example.project.ui.theme.CraftsmenColors
 
-enum class MainTab { Home, Shop, Settings }
+enum class MainTab { Home, Shops, Garage, Profile }
 
 @Composable
 fun BottomNavBar(
@@ -50,8 +50,8 @@ fun BottomNavBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .windowInsetsPadding(WindowInsets.navigationBars)
-                .padding(horizontal = 12.dp, vertical = 10.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                .padding(horizontal = 10.dp, vertical = 10.dp),
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             NavItem(
@@ -64,18 +64,26 @@ fun BottomNavBar(
             )
             NavItem(
                 theme = theme,
-                label = s.tabShop,
-                active = selected == MainTab.Shop,
-                onClick = { onSelect(MainTab.Shop) },
+                label = s.tabShops,
+                active = selected == MainTab.Shops,
+                onClick = { onSelect(MainTab.Shops) },
                 icon = { color -> IconShop(size = 22.dp, color = color, stroke = 2f) },
                 modifier = Modifier.weight(1f),
             )
             NavItem(
                 theme = theme,
-                label = s.tabSettings,
-                active = selected == MainTab.Settings,
-                onClick = { onSelect(MainTab.Settings) },
-                icon = { color -> IconSettings(size = 22.dp, color = color, stroke = 2f) },
+                label = s.tabGarage,
+                active = selected == MainTab.Garage,
+                onClick = { onSelect(MainTab.Garage) },
+                icon = { color -> IconCalendar(size = 22.dp, color = color) },
+                modifier = Modifier.weight(1f),
+            )
+            NavItem(
+                theme = theme,
+                label = s.tabProfile,
+                active = selected == MainTab.Profile,
+                onClick = { onSelect(MainTab.Profile) },
+                icon = { color -> IconUser(size = 22.dp, color = color) },
                 modifier = Modifier.weight(1f),
             )
         }
@@ -98,18 +106,19 @@ private fun NavItem(
             .clip(RoundedCornerShape(14.dp))
             .background(bg)
             .clickable(onClick = onClick)
-            .padding(horizontal = 14.dp, vertical = 10.dp),
+            .padding(horizontal = 10.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) {
         icon(fg)
         if (active) {
-            Spacer(Modifier.width(8.dp))
+            Spacer(Modifier.width(6.dp))
             Text(
                 text = label,
                 color = fg,
-                fontSize = 13.sp,
+                fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold,
+                maxLines = 1,
             )
         }
     }

@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import org.example.project.ui.components.AppButton
 import org.example.project.ui.components.AppLogo
 import org.example.project.ui.components.AuthTextField
+import org.example.project.ui.components.ButtonVariant
 import org.example.project.ui.i18n.LocalLanguage
 import org.example.project.ui.i18n.LocalStrings
 import org.example.project.ui.i18n.LocalToggleLanguage
@@ -46,6 +47,7 @@ fun LoginScreen(
     onLogin: (email: String, password: String) -> Unit,
     onRegister: () -> Unit,
     onForgotPassword: () -> Unit,
+    onGuest: () -> Unit,
     busy: Boolean = false,
     errorText: String? = null,
 ) {
@@ -176,9 +178,18 @@ fun LoginScreen(
         Spacer(Modifier.height(20.dp))
         AppButton(
             theme = theme,
-            text = if (busy) "..." else s.loginAction,
+            text = s.loginAction,
             onClick = { onLogin(email, password) },
             enabled = canSubmit,
+            busy = busy,
+        )
+
+        Spacer(Modifier.height(12.dp))
+        AppButton(
+            theme = theme,
+            text = s.continueAsGuest,
+            onClick = onGuest,
+            variant = ButtonVariant.Secondary,
         )
 
         Spacer(Modifier.height(28.dp))
