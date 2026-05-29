@@ -267,7 +267,7 @@ interface Strings {
 }
 
 object EnglishStrings : Strings {
-    override val appName = "AutoFix"
+    override val appName = "AutoRepair"
     override val brandTagline = "Trusted Georgian mechanics, in one place"
 
     override val splashTagline = "Trusted Georgian mechanics, in one place"
@@ -296,7 +296,7 @@ object EnglishStrings : Strings {
     override val registerCta = "Create account"
     override val orDivider = "OR"
 
-    override val registerPickerTitle = "Join AutoFix"
+    override val registerPickerTitle = "Join AutoRepair"
     override val registerPickerSubtitle = "Pick the account type that fits you"
     override val roleUserTitle = "I'm a car owner"
     override val roleUserSubtitle = "Find and review trusted mechanics"
@@ -535,7 +535,7 @@ object EnglishStrings : Strings {
 }
 
 object GeorgianStrings : Strings {
-    override val appName = "AutoFix"
+    override val appName = "AutoRepair"
     override val brandTagline = "სანდო ქართველი მექანიკოსები ერთ სივრცეში"
 
     override val splashTagline = "სანდო ქართველი მექანიკოსები ერთ სივრცეში"
@@ -564,7 +564,7 @@ object GeorgianStrings : Strings {
     override val registerCta = "ანგარიშის შექმნა"
     override val orDivider = "ან"
 
-    override val registerPickerTitle = "შემოუერთდი AutoFix-ს"
+    override val registerPickerTitle = "შემოუერთდი AutoRepair-ს"
     override val registerPickerSubtitle = "აირჩიე ანგარიშის ტიპი"
     override val roleUserTitle = "ვარ მანქანის მფლობელი"
     override val roleUserSubtitle = "იპოვე და შეაფასე სანდო მექანიკოსები"

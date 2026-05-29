@@ -65,7 +65,7 @@ fun SplashScreen(theme: CraftsmenColors, onDone: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-            AppLogo(theme = theme, size = 96.dp)
+            AppLogo(size = 96.dp)
             Spacer(Modifier.height(20.dp))
             Text(
                 text = s.appName,

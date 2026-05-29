@@ -10,6 +10,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
@@ -113,6 +114,10 @@ fun App() {
                 modifier = Modifier
                     .fillMaxSize()
                     .background(theme.bg)
+                    // Shrink the visible area when the keyboard appears so the
+                    // focused input scrolls into view above it instead of being
+                    // hidden underneath. Works on Android and iOS.
+                    .imePadding()
                     .pointerInput(Unit) {
                         detectTapGestures(onTap = {
                             focusManager.clearFocus()

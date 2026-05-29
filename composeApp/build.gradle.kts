@@ -19,6 +19,28 @@ val mapsApiKey: String = run {
         ?: ""
 }
 
+// Reads upload signing config from signing.properties (gitignored) or env vars.
+// Returns null if no release signing material is available — debug-only builds.
+val releaseSigning: Map<String, String>? = run {
+    val props = Properties()
+    val f = rootProject.file("signing.properties")
+    if (f.exists()) f.inputStream().use { props.load(it) }
+    fun pick(key: String): String? =
+        props.getProperty(key) ?: System.getenv(key)
+    val storeFile = pick("STORE_FILE")
+    val storePassword = pick("STORE_PASSWORD")
+    val keyAlias = pick("KEY_ALIAS")
+    val keyPassword = pick("KEY_PASSWORD")
+    if (storeFile != null && storePassword != null && keyAlias != null && keyPassword != null) {
+        mapOf(
+            "STORE_FILE" to storeFile,
+            "STORE_PASSWORD" to storePassword,
+            "KEY_ALIAS" to keyAlias,
+            "KEY_PASSWORD" to keyPassword,
+        )
+    } else null
+}
+
 kotlin {
     androidTarget {
         compilerOptions {
@@ -78,7 +100,7 @@ android {
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "org.example.project"
+        applicationId = "ge.autorepair.app"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
@@ -90,9 +112,25 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    signingConfigs {
+        if (releaseSigning != null) {
+            create("release") {
+                storeFile = file(releaseSigning["STORE_FILE"]!!)
+                storePassword = releaseSigning["STORE_PASSWORD"]
+                keyAlias = releaseSigning["KEY_ALIAS"]
+                keyPassword = releaseSigning["KEY_PASSWORD"]
+            }
+        }
+    }
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
+            signingConfig = signingConfigs.findByName("release")
         }
     }
     compileOptions {

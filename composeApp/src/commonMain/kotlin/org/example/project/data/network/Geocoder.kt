@@ -18,7 +18,7 @@ object Geocoder {
         install(ContentNegotiation) { json(networkJson) }
         defaultRequest {
             // Nominatim requires a valid identifying User-Agent.
-            header(HttpHeaders.UserAgent, "CraftsmenApp/1.0 (contact@autorepair.ge)")
+            header(HttpHeaders.UserAgent, "AutoRepair/1.0 (contact@autorepair.ge)")
             header(HttpHeaders.AcceptLanguage, "ka,en")
         }
     }

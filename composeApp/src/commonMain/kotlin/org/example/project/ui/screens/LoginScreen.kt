@@ -73,7 +73,7 @@ fun LoginScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                AppLogo(theme = theme, size = 32.dp)
+                AppLogo(size = 32.dp)
                 Spacer(Modifier.size(8.dp))
                 Text(
                     text = s.appName,
