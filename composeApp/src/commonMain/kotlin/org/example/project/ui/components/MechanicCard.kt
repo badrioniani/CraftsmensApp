@@ -32,9 +32,11 @@ import org.example.project.ui.icons.IconPin
 import org.example.project.ui.icons.IconShield
 import org.example.project.ui.icons.IconStar
 import org.example.project.ui.theme.CraftsmenColors
+import org.example.project.ui.util.formatDistance
 import org.example.project.ui.util.rememberContactActions
 
 private val VipGold = Color(0xFFF59E0B)
+private val SuperVipPurple = Color(0xFFA855F7)
 
 @Composable
 fun MechanicListCard(
@@ -44,27 +46,34 @@ fun MechanicListCard(
 ) {
     val s = LocalStrings.current
     val contact = rememberContactActions()
+    val tierColor = when {
+        mech.superVip -> SuperVipPurple
+        mech.vip -> VipGold
+        else -> theme.border
+    }
+    val hasTier = mech.superVip || mech.vip
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(18.dp))
             .background(theme.bgCard)
             .border(
-                width = if (mech.vip) 1.5.dp else 1.dp,
-                color = if (mech.vip) VipGold else theme.border,
+                width = if (hasTier) 1.5.dp else 1.dp,
+                color = tierColor,
                 shape = RoundedCornerShape(18.dp),
             )
             .clickable(onClick = onClick)
             .padding(16.dp),
     ) {
-        if (mech.vip) {
+        if (hasTier) {
+            val label = if (mech.superVip) s.badgeSuperVip else s.badgeVip
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = Modifier.padding(bottom = 10.dp),
             ) {
-                IconStar(size = 11.dp, color = VipGold)
-                Text("VIP", color = VipGold, fontSize = 10.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.6.sp)
+                IconStar(size = 11.dp, color = tierColor)
+                Text(label, color = tierColor, fontSize = 10.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.6.sp)
             }
         }
         Row(
@@ -159,6 +168,22 @@ fun MechanicListCard(
                     color = theme.textMute,
                     fontSize = 10.sp,
                 )
+                val distanceLabel = formatDistance(mech.distance, s.distanceKmSuffix, s.distanceMSuffix)
+                if (distanceLabel != null) {
+                    Spacer(Modifier.height(4.dp))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(3.dp),
+                    ) {
+                        IconPin(size = 10.dp, color = theme.textMute)
+                        Text(
+                            text = distanceLabel,
+                            color = theme.textDim,
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Medium,
+                        )
+                    }
+                }
             }
         }
 

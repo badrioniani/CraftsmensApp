@@ -11,17 +11,26 @@ data class UserDto(
     val phone: String = "",
     val role: String,
     @SerialName("email_verified") val emailVerified: Boolean = false,
+    @SerialName("phone_verified") val phoneVerified: Boolean = false,
     @SerialName("created_at") val createdAt: String? = null,
 )
 
 @Serializable
 data class LoginRequest(val email: String, val password: String)
 
+/**
+ * Login/register response when the request carries `X-Client: mobile`.
+ * Backend returns the JWT tokens in the body (web clients still get them as
+ * httpOnly cookies) so the app reads access/refresh directly.
+ *
+ * Defaults are empty so a misconfigured proxy that strips `X-Client` doesn't
+ * crash deserialization — [AuthApi] surfaces a clearer error in that case.
+ */
 @Serializable
 data class AuthResponse(
     val user: UserDto,
-    val access: String,
-    val refresh: String,
+    val access: String = "",
+    val refresh: String = "",
     @SerialName("email_verified") val emailVerified: Boolean = false,
 )
 
@@ -56,3 +65,9 @@ data class PasswordResetConfirmRequest(
     val code: String,
     @SerialName("new_password") val newPassword: String,
 )
+
+@Serializable
+data class VerifyPhoneRequest(val code: String)
+
+@Serializable
+data class SimpleDetailResponse(val detail: String = "")

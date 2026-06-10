@@ -52,6 +52,7 @@ import org.example.project.ui.screens.ResetPasswordScreen
 import org.example.project.ui.screens.ReviewsScreen
 import org.example.project.ui.screens.ShopDetailScreen
 import org.example.project.ui.screens.SplashScreen
+import org.example.project.ui.screens.VerifyPhoneScreen
 import org.example.project.ui.i18n.AppLanguage
 import org.example.project.ui.i18n.LocalLanguage
 import org.example.project.ui.i18n.LocalSetInputFocused
@@ -94,8 +95,24 @@ fun App() {
     fun resetTo(r: Route) { stack.clear(); stack.add(r) }
 
     LaunchedEffect(authState) {
-        if (stack.last() is Route.Splash && authState !is AuthState.Loading) {
-            resetTo(if (authState is AuthState.Authenticated) Route.Home else Route.Login)
+        val st = authState
+        // Splash flips to either VerifyPhone (unverified phone), Home (verified), or Login.
+        if (stack.last() is Route.Splash && st !is AuthState.Loading) {
+            when (st) {
+                is AuthState.Authenticated ->
+                    resetTo(if (st.user.phoneVerified) Route.Home else Route.VerifyPhone)
+                is AuthState.Anonymous -> resetTo(Route.Login)
+                AuthState.Loading -> Unit
+            }
+        }
+        // After login/register or a /me refresh, force unverified users onto the
+        // VerifyPhone screen — mirrors the web's MobileVerificationGuard.
+        if (st is AuthState.Authenticated && !st.user.phoneVerified) {
+            val top = stack.last()
+            val onAllowedScreen = top is Route.VerifyPhone ||
+                top is Route.Login || top is Route.Register ||
+                top is Route.RegisterPicker || top is Route.Splash
+            if (!onAllowedScreen) resetTo(Route.VerifyPhone)
         }
     }
 
@@ -129,8 +146,9 @@ fun App() {
                     is Route.Splash -> SplashScreen(
                         theme = theme,
                         onDone = {
-                            when (authState) {
-                                is AuthState.Authenticated -> resetTo(Route.Home)
+                            when (val st = authState) {
+                                is AuthState.Authenticated ->
+                                    resetTo(if (st.user.phoneVerified) Route.Home else Route.VerifyPhone)
                                 is AuthState.Anonymous -> resetTo(Route.Login)
                                 AuthState.Loading -> Unit
                             }
@@ -198,15 +216,32 @@ fun App() {
                                 password = form.password,
                                 role = if (form.role == UserRole.Mechanic) "mechanic" else "user",
                             ) {
-                                // Mechanics land on their dashboard right after sign-up
-                                // (mirrors the web's post-register redirect); others go home.
-                                resetTo(Route.Home)
-                                if (form.role == UserRole.Mechanic) push(Route.MechanicDashboard)
+                                // New accounts always need SMS verification before
+                                // anything else — the LaunchedEffect above also
+                                // enforces this, but route explicitly so we don't
+                                // flash the Home shell in between.
+                                resetTo(Route.VerifyPhone)
                             }
                         },
                         onLogin = { authVm.clearError(); resetTo(Route.Login) },
                         busy = authBusy,
                         errorText = authError,
+                    )
+                    is Route.VerifyPhone -> VerifyPhoneScreen(
+                        theme = theme,
+                        authVm = authVm,
+                        user = (authState as? AuthState.Authenticated)?.user,
+                        onVerified = {
+                            // After phone confirmation, mechanics drop into their
+                            // dashboard like in the web's post-register flow.
+                            resetTo(Route.Home)
+                            val role = (authState as? AuthState.Authenticated)?.user?.role
+                            if (role == "mechanic") push(Route.MechanicDashboard)
+                        },
+                        onLogout = {
+                            authVm.logout()
+                            resetTo(Route.Login)
+                        },
                     )
                     is Route.Home -> MainShell(
                         theme = theme,

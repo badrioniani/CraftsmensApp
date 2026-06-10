@@ -32,11 +32,16 @@ fun MechanicDto.toUiModel(): Mechanic {
         rating = rating,
         reviews = reviewCount,
         years = 0,
-        distance = 0.0,
+        // POSITIVE_INFINITY means "unknown" — overwritten in ListScreen once the
+        // user's location is available; formatDistance returns null until then.
+        distance = Double.POSITIVE_INFINITY,
         price = 2,
         available = true,
         verified = isVerified,
-        vip = isVip,
+        // Mirror web behavior: SUPER VIP eclipses regular VIP. Keep them mutually exclusive
+        // so the UI can render exactly one tier badge.
+        vip = isVip && !isSuperVip,
+        superVip = isSuperVip,
         specialties = serviceLabels,
         brands = brandLabels,
         phone = phone,

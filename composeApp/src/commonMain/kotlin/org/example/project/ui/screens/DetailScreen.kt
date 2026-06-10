@@ -321,6 +321,7 @@ private fun StatBlock(
 
 @Composable
 private fun BadgesRow(theme: CraftsmenColors, mech: Mechanic) {
+    val s = LocalStrings.current
     androidx.compose.foundation.layout.FlowRow(
         modifier = Modifier
             .fillMaxWidth()
@@ -329,19 +330,20 @@ private fun BadgesRow(theme: CraftsmenColors, mech: Mechanic) {
         horizontalArrangement = Arrangement.spacedBy(6.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
-        if (mech.vip) {
-            val gold = Color(0xFFF59E0B)
+        if (mech.superVip || mech.vip) {
+            val tierColor = if (mech.superVip) Color(0xFFA855F7) else Color(0xFFF59E0B)
+            val tierLabel = if (mech.superVip) s.badgeSuperVip else s.badgeVip
             Row(
                 modifier = Modifier
                     .clip(CircleShape)
-                    .background(gold.copy(alpha = 0.15f))
-                    .border(1.dp, gold.copy(alpha = 0.5f), CircleShape)
+                    .background(tierColor.copy(alpha = 0.15f))
+                    .border(1.dp, tierColor.copy(alpha = 0.5f), CircleShape)
                     .padding(horizontal = 10.dp, vertical = 6.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
             ) {
-                IconStar(size = 11.dp, color = gold)
-                Text(text = "VIP", color = gold, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                IconStar(size = 11.dp, color = tierColor)
+                Text(text = tierLabel, color = tierColor, fontSize = 11.sp, fontWeight = FontWeight.Bold)
             }
         }
         mech.badges.forEach { b ->

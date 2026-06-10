@@ -73,9 +73,11 @@ import org.example.project.ui.icons.IconFilter
 import org.example.project.ui.icons.IconMap
 import org.example.project.ui.icons.IconSearch
 import org.example.project.ui.icons.IconX
+import org.example.project.ui.map.rememberCurrentLocation
 import org.example.project.ui.theme.CraftsmenColors
+import org.example.project.ui.util.haversineKm
 
-enum class SortMode { Distance, Rating, Experience }
+enum class SortMode { Distance, Rating }
 
 @Composable
 fun MechanicsListScreen(
@@ -113,18 +115,38 @@ fun MechanicsListScreen(
         )
     }
 
-    val items = listState.items
+    // Best-effort device location. Null when permission isn't granted or the
+    // platform can't resolve a fix yet — in that case `distance` stays unknown
+    // and the Nearest sort falls back to the original order.
+    val myLocation = rememberCurrentLocation()
 
-    val tieBreak = when (sort) {
-        SortMode.Distance -> compareBy<Mechanic> { it.distance }
-        SortMode.Rating -> compareByDescending<Mechanic> { it.rating }
-        SortMode.Experience -> compareByDescending<Mechanic> { it.years }
+    val itemsWithDistance = remember(listState.items, myLocation) {
+        if (myLocation == null) listState.items
+        else listState.items.map { m ->
+            val d = if (m.lat != null && m.lng != null) {
+                haversineKm(myLocation.lat, myLocation.lng, m.lat, m.lng)
+            } else Double.POSITIVE_INFINITY
+            m.copy(distance = d)
+        }
     }
-    // VIP mechanics are always pinned to the top (matches the site / backend order).
-    val sorted = items.sortedWith(compareByDescending<Mechanic> { it.vip }.then(tieBreak))
+
+    // Nearest is a pure-distance sort: tier boosts are skipped so the closest
+    // mechanic always wins regardless of VIP status. Rating keeps the site's
+    // default SUPER VIP → VIP → others pinning.
+    val sorted = when (sort) {
+        SortMode.Distance -> itemsWithDistance.sortedBy { it.distance }
+        SortMode.Rating -> itemsWithDistance.sortedWith(
+            compareByDescending<Mechanic> { it.superVip }
+                .thenByDescending { it.vip }
+                .thenByDescending { it.rating }
+        )
+    }
 
     // Infinite scroll: load the next page as the user nears the bottom.
     val resultsListState = rememberLazyListState()
+    // Snap back to the top whenever the sort mode flips, so the user sees the
+    // new first item instead of being stranded mid-list at the same offset.
+    LaunchedEffect(sort) { resultsListState.animateScrollToItem(0) }
     val reachedEnd by remember {
         derivedStateOf {
             val last = resultsListState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
@@ -189,7 +211,6 @@ fun MechanicsListScreen(
                         text = when (mode) {
                             SortMode.Distance -> s.sortNearest
                             SortMode.Rating -> s.sortRating
-                            SortMode.Experience -> s.sortExperience
                         },
                         active = sort == mode,
                         onClick = { sort = mode },

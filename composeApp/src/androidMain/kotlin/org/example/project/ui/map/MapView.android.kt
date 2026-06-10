@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -80,9 +81,20 @@ actual fun rememberCurrentLocation(): MapCamera? {
         if (!granted) return@LaunchedEffect
         runCatching {
             val client = LocationServices.getFusedLocationProviderClient(context)
+            // lastLocation is cached and can be null on a fresh install / after a
+            // device reboot before any other app has requested a fix. Fall back
+            // to getCurrentLocation() which actively triggers GPS so the first
+            // visit to the list still produces a sortable distance.
             client.lastLocation.addOnSuccessListener { loc ->
                 if (loc != null) {
                     result = MapCamera(loc.latitude, loc.longitude, zoom = 13f)
+                } else {
+                    client.getCurrentLocation(Priority.PRIORITY_BALANCED_POWER_ACCURACY, null)
+                        .addOnSuccessListener { fresh ->
+                            if (fresh != null) {
+                                result = MapCamera(fresh.latitude, fresh.longitude, zoom = 13f)
+                            }
+                        }
                 }
             }
         }

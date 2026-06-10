@@ -12,6 +12,7 @@ sealed class Route {
     data class ResetPassword(val email: String, val prefilledCode: String? = null) : Route()
     data object RegisterPicker : Route()
     data class Register(val role: UserRole) : Route()
+    data object VerifyPhone : Route()
 
     // Main shell — bottom tabs render inside
     data object Home : Route()

@@ -143,12 +143,35 @@ class MechanicDashboardViewModel(
 
     fun clearPin() = updateForm { it.copy(latitude = "", longitude = "") }
 
-    /** Drop the pin at the device location and reverse-geocode it into the address field. */
+    /** Drop the pin at the device location and reverse-geocode address + city + district. */
     fun useMyLocation(lat: Double, lng: Double) {
         setPin(lat, lng)
         viewModelScope.launch {
-            val address = org.example.project.data.network.Geocoder.reverse(lat, lng)
-            if (!address.isNullOrBlank()) updateForm { it.copy(address = address) }
+            val geo = org.example.project.data.network.Geocoder.reverse(lat, lng) ?: return@launch
+            updateForm { form ->
+                val cities = _state.value.cities
+                // Match the geocoded city against the catalog (try Georgian, then English).
+                val matchedCity = geo.city?.let { name ->
+                    cities.firstOrNull { c ->
+                        c.name.equals(name, ignoreCase = true) ||
+                            c.nameEn.equals(name, ignoreCase = true)
+                    }
+                }
+                val nextCity = matchedCity?.name ?: form.city
+                // District is meaningful only within the matched city's list — and only
+                // if the catalog actually has a row that matches Nominatim's label.
+                val nextDistrict = matchedCity?.districts?.firstOrNull { d ->
+                    geo.district?.let {
+                        d.name.equals(it, ignoreCase = true) ||
+                            d.nameEn.equals(it, ignoreCase = true)
+                    } == true
+                }?.name ?: form.district
+                form.copy(
+                    address = geo.address.ifBlank { form.address },
+                    city = nextCity,
+                    district = nextDistrict,
+                )
+            }
         }
     }
 
@@ -189,12 +212,23 @@ class MechanicDashboardViewModel(
         )
     }
 
-    fun save(onPhoneInvalid: String, onIncompleteSpec: String, onSaveError: String, savedMessage: String) {
+    fun save(
+        onMissingBasics: String,
+        onMissingCity: String,
+        onIncompleteSpec: String,
+        onSaveError: String,
+        savedMessage: String,
+    ) {
         val s = _state.value
         if (s.saving) return
         val form = s.form
         if (form.businessName.isBlank() || form.phone.isBlank()) {
-            _state.value = s.copy(error = onPhoneInvalid)
+            _state.value = s.copy(error = onMissingBasics)
+            return
+        }
+        // Backend requires city — no blank=True on MechanicProfile.city.
+        if (form.city.isBlank()) {
+            _state.value = s.copy(error = onMissingCity)
             return
         }
         // Reject rows that picked a brand but no service (and vice versa).

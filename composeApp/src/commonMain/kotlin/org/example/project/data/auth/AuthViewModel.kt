@@ -125,4 +125,44 @@ class AuthViewModel(
                 }
         }
     }
+
+    /** Sends a 6-digit SMS code to the authenticated user's phone. */
+    fun sendPhoneCode(onSuccess: () -> Unit = {}, onError: (String) -> Unit = {}) {
+        if (_busy.value) return
+        _busy.value = true
+        _error.value = null
+        viewModelScope.launch {
+            runCatching { repo.sendPhoneCode() }
+                .onSuccess {
+                    _busy.value = false
+                    onSuccess()
+                }
+                .onFailure {
+                    _busy.value = false
+                    val msg = it.message ?: "Could not send SMS"
+                    _error.value = msg
+                    onError(msg)
+                }
+        }
+    }
+
+    fun verifyPhone(code: String, onSuccess: () -> Unit, onError: (String) -> Unit = {}) {
+        if (_busy.value) return
+        _busy.value = true
+        _error.value = null
+        viewModelScope.launch {
+            runCatching { repo.verifyPhone(code) }
+                .onSuccess { user ->
+                    _state.value = AuthState.Authenticated(user)
+                    _busy.value = false
+                    onSuccess()
+                }
+                .onFailure {
+                    _busy.value = false
+                    val msg = it.message ?: "Invalid or expired code"
+                    _error.value = msg
+                    onError(msg)
+                }
+        }
+    }
 }

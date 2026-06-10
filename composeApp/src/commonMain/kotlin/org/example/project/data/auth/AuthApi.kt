@@ -29,7 +29,7 @@ class AuthApi(
                 response.status.value,
             )
         }
-        return response.body()
+        return response.body<AuthResponse>().requireTokens()
     }
 
     suspend fun register(req: RegisterRequest): AuthResponse {
@@ -43,7 +43,20 @@ class AuthApi(
                 response.status.value,
             )
         }
-        return response.body()
+        return response.body<AuthResponse>().requireTokens()
+    }
+
+    /** Backend returns tokens only when it sees `X-Client: mobile`. When the
+     *  proxy/server strip that header the body comes back token-less — turn it
+     *  into a clear error instead of crashing downstream. */
+    private fun AuthResponse.requireTokens(): AuthResponse {
+        if (access.isBlank() || refresh.isBlank()) {
+            throw AuthApiException(
+                "Server did not return access/refresh tokens. " +
+                    "Make sure the backend proxy forwards the X-Client header.",
+            )
+        }
+        return this
     }
 
     /** The shared client attaches the bearer token and refreshes it on 401. */
@@ -84,6 +97,30 @@ class AuthApi(
         val response = client.post("$baseUrl/auth/password/reset/confirm/") {
             contentType(ContentType.Application.Json)
             setBody(PasswordResetConfirmRequest(email = email, code = code, newPassword = newPassword))
+        }
+        if (!response.status.isSuccess()) {
+            throw AuthApiException(
+                extractApiError(response.bodyAsText(), default = "Invalid or expired code"),
+                response.status.value,
+            )
+        }
+    }
+
+    /** Triggers an SMS to the authenticated user's stored phone number. */
+    suspend fun sendPhoneCode() {
+        val response = client.post("$baseUrl/auth/send-phone-code/")
+        if (!response.status.isSuccess()) {
+            throw AuthApiException(
+                extractApiError(response.bodyAsText(), default = "Failed to send SMS"),
+                response.status.value,
+            )
+        }
+    }
+
+    suspend fun verifyPhone(code: String) {
+        val response = client.post("$baseUrl/auth/verify-phone/") {
+            contentType(ContentType.Application.Json)
+            setBody(VerifyPhoneRequest(code = code.trim()))
         }
         if (!response.status.isSuccess()) {
             throw AuthApiException(

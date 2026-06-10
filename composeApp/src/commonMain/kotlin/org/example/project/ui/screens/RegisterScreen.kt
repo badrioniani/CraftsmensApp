@@ -55,6 +55,17 @@ data class RegisterFormResult(
 
 private val EmailRegex = Regex("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")
 
+// Strips the same junk Django's normalize_georgian_phone() strips so the same
+// numbers we accept here pass the server-side check 1:1.
+private val PhoneStripRegex = Regex("[\\s\\-().+]")
+// Mirrors `^\+?(?:995|0)?([5][0-9]{8})$` post-strip: optional 995/0 then 9 digits starting with 5.
+private val PhoneRegex = Regex("^(?:995|0)?5[0-9]{8}$")
+
+private fun isValidGeorgianPhone(value: String): Boolean {
+    if (value.isBlank()) return false
+    return PhoneRegex.matches(PhoneStripRegex.replace(value, ""))
+}
+
 /** Friendly password-strength heuristic mirroring the web app. Returns 0–4. */
 private fun scorePassword(pw: String): Int {
     if (pw.isEmpty()) return 0
@@ -84,12 +95,18 @@ fun RegisterScreen(
     var phone by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var emailTouched by remember { mutableStateOf(false) }
+    var phoneTouched by remember { mutableStateOf(false) }
 
     val emailValid = EmailRegex.matches(email.trim())
+    val phoneValid = isValidGeorgianPhone(phone)
     val score = scorePassword(password)
     val showEmailError = emailTouched && email.isNotBlank() && !emailValid
+    val showPhoneError = phoneTouched && phone.isNotBlank() && !phoneValid
 
-    val canSubmit = fullName.isNotBlank() && emailValid && password.length >= 8 && !busy
+    // Phone is mandatory: SMS verification kicks in immediately after register,
+    // and a user without a phone gets stuck on a permanent error screen.
+    val canSubmit = fullName.isNotBlank() && emailValid && phoneValid &&
+        password.length >= 8 && !busy
 
     val submit: () -> Unit = {
         if (canSubmit) onSubmit(
@@ -190,12 +207,18 @@ fun RegisterScreen(
         AuthTextField(
             theme = theme,
             value = phone,
-            onValueChange = { phone = it },
+            onValueChange = { phone = it; phoneTouched = true },
             placeholder = s.phonePlaceholder,
             label = s.phoneLabel,
             leading = { IconPhone(size = 18.dp, color = theme.textDim) },
             keyboardType = KeyboardType.Phone,
             imeAction = ImeAction.Next,
+        )
+        Spacer(Modifier.height(6.dp))
+        Text(
+            text = if (showPhoneError) s.phoneInvalid else s.phoneHint,
+            color = if (showPhoneError) theme.danger else theme.textMute,
+            fontSize = 12.sp,
         )
 
         Spacer(Modifier.height(14.dp))

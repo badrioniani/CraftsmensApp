@@ -44,6 +44,7 @@ data class MechanicDto(
     @SerialName("profile_image") val profileImage: String? = null,
     @SerialName("is_verified") val isVerified: Boolean = false,
     @SerialName("is_vip") val isVip: Boolean = false,
+    @SerialName("is_super_vip") val isSuperVip: Boolean = false,
     @SerialName("average_rating") val averageRating: String = "0",
     @SerialName("review_count") val reviewCount: Int = 0,
     val specializations: List<MechanicSpecializationDto> = emptyList(),

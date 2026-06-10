@@ -20,6 +20,7 @@ data class Mechanic(
     val available: Boolean,
     val verified: Boolean,
     val vip: Boolean = false,
+    val superVip: Boolean = false,
     val specialties: List<String>,
     val brands: List<String>,
     val phone: String,

@@ -459,7 +459,15 @@ private fun EditSection(
         AppButton(
             theme = theme,
             text = if (state.saving) s.dashSaving else s.dashSaveProfile,
-            onClick = { vm.save(s.dashSaveError, s.dashIncompleteSpec, s.dashSaveError, s.dashProfileSaved) },
+            onClick = {
+                vm.save(
+                    onMissingBasics = s.dashMissingBasics,
+                    onMissingCity = s.dashMissingCity,
+                    onIncompleteSpec = s.dashIncompleteSpec,
+                    onSaveError = s.dashSaveError,
+                    savedMessage = s.dashProfileSaved,
+                )
+            },
             enabled = state.dirty && !state.saving,
             busy = state.saving,
             modifier = Modifier.weight(1f),

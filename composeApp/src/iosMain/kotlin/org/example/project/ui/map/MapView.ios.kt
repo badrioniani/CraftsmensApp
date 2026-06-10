@@ -14,8 +14,11 @@ import androidx.compose.ui.viewinterop.UIKitView
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.ObjCAction
 import kotlinx.cinterop.useContents
+import platform.CoreLocation.CLAuthorizationStatus
+import platform.CoreLocation.CLLocation
 import platform.CoreLocation.CLLocationCoordinate2DMake
 import platform.CoreLocation.CLLocationManager
+import platform.CoreLocation.CLLocationManagerDelegateProtocol
 import platform.CoreLocation.kCLAuthorizationStatusAuthorizedAlways
 import platform.CoreLocation.kCLAuthorizationStatusAuthorizedWhenInUse
 import platform.Foundation.NSSelectorFromString
@@ -112,8 +115,40 @@ private class MapTapHandler(private val mapView: MKMapView) : NSObject() {
 
 @Composable
 actual fun rememberCurrentLocation(): MapCamera? {
-    val manager = remember { CLLocationManager() }
     var result by remember { mutableStateOf<MapCamera?>(null) }
+
+    // A delegate is required so the first-launch flow works: when permission
+    // is "not determined" we ask for it, and CLLocationManagerDelegate fires
+    // didChangeAuthorizationStatus once the user taps Allow — only then do we
+    // have a valid fix to publish. The previous LaunchedEffect(Unit) version
+    // returned early on the prompt and never produced a location.
+    val (manager, _) = remember {
+        val mgr = CLLocationManager()
+        val delegate = object : NSObject(), CLLocationManagerDelegateProtocol {
+            override fun locationManager(
+                manager: CLLocationManager,
+                didUpdateLocations: List<*>,
+            ) {
+                val loc = didUpdateLocations.lastOrNull() as? CLLocation ?: return
+                loc.coordinate.useContents {
+                    result = MapCamera(latitude, longitude, zoom = 13f)
+                }
+                manager.stopUpdatingLocation()
+            }
+
+            override fun locationManager(
+                manager: CLLocationManager,
+                didChangeAuthorizationStatus: CLAuthorizationStatus,
+            ) {
+                val granted = didChangeAuthorizationStatus == kCLAuthorizationStatusAuthorizedAlways ||
+                    didChangeAuthorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse
+                if (granted) manager.startUpdatingLocation()
+            }
+        }
+        mgr.delegate = delegate
+        mgr to delegate
+    }
+
     LaunchedEffect(Unit) {
         val status = CLLocationManager.authorizationStatus()
         val granted = status == kCLAuthorizationStatusAuthorizedAlways ||
@@ -122,11 +157,12 @@ actual fun rememberCurrentLocation(): MapCamera? {
             manager.requestWhenInUseAuthorization()
             return@LaunchedEffect
         }
-        manager.location?.let { loc ->
-            loc.coordinate.useContents {
-                result = MapCamera(latitude, longitude, zoom = 13f)
-            }
+        // Already granted on a previous launch — try the cached fix first, then
+        // kick a fresh update so we don't sit on stale coordinates.
+        manager.location?.coordinate?.useContents {
+            result = MapCamera(latitude, longitude, zoom = 13f)
         }
+        manager.startUpdatingLocation()
     }
     return result
 }

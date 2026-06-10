@@ -57,6 +57,8 @@ interface Strings {
     val fullNamePlaceholder: String
     val phoneLabel: String
     val phonePlaceholder: String
+    val phoneHint: String
+    val phoneInvalid: String
     val confirmPasswordLabel: String
     val confirmPasswordPlaceholder: String
     val workshopNameLabel: String
@@ -84,6 +86,20 @@ interface Strings {
     val continueAsGuest: String
     val guestModeTitle: String
     val guestModeBody: String
+
+    // Phone verification (OTP)
+    val verifyPhoneTitle: String
+    val verifyPhoneSubtitleSending: String
+    val verifyPhoneSubtitleSent: String
+    val verifyPhoneSubtitleFallback: String
+    val verifyPhoneAction: String
+    val verifyPhoneVerifying: String
+    val verifyPhoneSuccessTitle: String
+    val verifyPhoneSuccessBody: String
+    val verifyPhoneResendQuestion: String
+    val verifyPhoneResendAction: String
+    val verifyPhoneResendSending: String
+    val verifyPhoneResendSent: String
 
     // Mechanic dashboard
     val dashTitle: String
@@ -135,6 +151,8 @@ interface Strings {
     val dashProfileSaved: String
     val dashSaveError: String
     val dashIncompleteSpec: String
+    val dashMissingBasics: String
+    val dashMissingCity: String
 
     // Home (hero / featured)
     val homeEyebrow: String
@@ -176,7 +194,6 @@ interface Strings {
     val catalogEmptyBody: String
     val sortNearest: String
     val sortRating: String
-    val sortExperience: String
 
     // Card
     val cardCall: String
@@ -189,6 +206,10 @@ interface Strings {
     // Verified
     val badgeVerified: String
     val badgeUnverified: String
+    val badgeVip: String
+    val badgeSuperVip: String
+    val distanceKmSuffix: String
+    val distanceMSuffix: String
 
     // Detail
     val about: String
@@ -311,6 +332,8 @@ object EnglishStrings : Strings {
     override val fullNamePlaceholder = "Your name"
     override val phoneLabel = "Phone"
     override val phonePlaceholder = "+995 5XX XXX XXX"
+    override val phoneHint = "Georgian mobile only — 9 digits starting with 5. We'll send an SMS code."
+    override val phoneInvalid = "Enter a valid Georgian mobile (e.g. +995 555 123 456)."
     override val confirmPasswordLabel = "Confirm password"
     override val confirmPasswordPlaceholder = "Re-enter your password"
     override val workshopNameLabel = "Workshop name"
@@ -339,6 +362,19 @@ object EnglishStrings : Strings {
     override val guestModeTitle = "You're browsing as a guest"
     override val guestModeBody =
         "Sign in or create an account to save your garage, leave reviews, and manage your profile."
+
+    override val verifyPhoneTitle = "Verify your phone"
+    override val verifyPhoneSubtitleSending = "Sending SMS..."
+    override val verifyPhoneSubtitleSent = "6-digit code sent to"
+    override val verifyPhoneSubtitleFallback = "Enter the SMS code"
+    override val verifyPhoneAction = "Verify"
+    override val verifyPhoneVerifying = "Verifying..."
+    override val verifyPhoneSuccessTitle = "Phone verified!"
+    override val verifyPhoneSuccessBody = "Taking you to the home screen..."
+    override val verifyPhoneResendQuestion = "Didn't get the code?"
+    override val verifyPhoneResendAction = "Resend code"
+    override val verifyPhoneResendSending = "Sending..."
+    override val verifyPhoneResendSent = "Sent ✓"
 
     override val dashTitle = "Mechanic dashboard"
     override val dashNotMechanic = "This dashboard is available for mechanic accounts."
@@ -390,6 +426,8 @@ object EnglishStrings : Strings {
     override val dashProfileSaved = "Profile saved."
     override val dashSaveError = "Could not save profile. Check required fields and specialization rows."
     override val dashIncompleteSpec = "Each specialization needs both a brand and a service. Fix or remove the highlighted rows."
+    override val dashMissingBasics = "Workshop name and phone are required."
+    override val dashMissingCity = "Please pick a city."
 
     override val homeEyebrow = "Trusted Georgian mechanics, in one place"
     override val homeTitleA = "Fix your car with a mechanic"
@@ -428,7 +466,6 @@ object EnglishStrings : Strings {
     override val catalogEmptyBody = "Adjust the filters or clear the model field for broader brand-level matches."
     override val sortNearest = "Nearest"
     override val sortRating = "Top rated"
-    override val sortExperience = "Most experience"
 
     override val cardCall = "Call"
     override val cardWhatsapp = "WhatsApp"
@@ -439,6 +476,10 @@ object EnglishStrings : Strings {
 
     override val badgeVerified = "Verified"
     override val badgeUnverified = "Unverified"
+    override val badgeVip = "VIP"
+    override val badgeSuperVip = "SUPER VIP"
+    override val distanceKmSuffix = "km"
+    override val distanceMSuffix = "m"
 
     override val about = "About"
     override val specialties = "Specialties"
@@ -579,6 +620,8 @@ object GeorgianStrings : Strings {
     override val fullNamePlaceholder = "შენი სახელი"
     override val phoneLabel = "ტელეფონი"
     override val phonePlaceholder = "+995 5XX XXX XXX"
+    override val phoneHint = "მხოლოდ ქართული მობილური — 9 ციფრი, იწყება 5-ით. SMS კოდი მოვა."
+    override val phoneInvalid = "შეიყვანე სწორი ქართული მობილური (მაგ: +995 555 123 456)."
     override val confirmPasswordLabel = "გაიმეორე პაროლი"
     override val confirmPasswordPlaceholder = "შეიყვანე ისევ პაროლი"
     override val workshopNameLabel = "სახელოსნოს დასახელება"
@@ -607,6 +650,19 @@ object GeorgianStrings : Strings {
     override val guestModeTitle = "ათვალიერებ როგორც სტუმარი"
     override val guestModeBody =
         "შედი ან შექმენი ანგარიში, რომ შეინახო გარაჟი, დატოვო შეფასებები და მართო პროფილი."
+
+    override val verifyPhoneTitle = "ტელეფონის დადასტურება"
+    override val verifyPhoneSubtitleSending = "SMS იგზავნება..."
+    override val verifyPhoneSubtitleSent = "6-ნიშნა კოდი გამოგზავნილია"
+    override val verifyPhoneSubtitleFallback = "შეიყვანე SMS კოდი"
+    override val verifyPhoneAction = "დადასტურება"
+    override val verifyPhoneVerifying = "მოწმდება..."
+    override val verifyPhoneSuccessTitle = "ტელეფონი დადასტურდა!"
+    override val verifyPhoneSuccessBody = "გადადიხართ მთავარ გვერდზე..."
+    override val verifyPhoneResendQuestion = "კოდი არ მიგიღია?"
+    override val verifyPhoneResendAction = "კოდის ხელახლა გაგზავნა"
+    override val verifyPhoneResendSending = "იგზავნება..."
+    override val verifyPhoneResendSent = "გამოგზავნილია ✓"
 
     override val dashTitle = "მექანიკოსის პანელი"
     override val dashNotMechanic = "ეს პანელი ხელმისაწვდომია მხოლოდ მექანიკოსის ანგარიშებისთვის."
@@ -658,6 +714,8 @@ object GeorgianStrings : Strings {
     override val dashProfileSaved = "პროფილი შენახულია."
     override val dashSaveError = "პროფილის შენახვა ვერ მოხერხდა. შეამოწმე სავალდებულო ველები და სპეციალიზაციები."
     override val dashIncompleteSpec = "ყოველ სპეციალიზაციას სჭირდება ბრენდიც და სერვისიც. შეასწორე ან წაშალე მონიშნული სტრიქონები."
+    override val dashMissingBasics = "სახელოსნოს დასახელება და ტელეფონი სავალდებულოა."
+    override val dashMissingCity = "გთხოვ აირჩიო ქალაქი."
 
     override val homeEyebrow = "სანდო ქართველი მექანიკოსები ერთ სივრცეში"
     override val homeTitleA = "შეაკეთე მანქანა მექანიკოსთან,"
@@ -696,7 +754,6 @@ object GeorgianStrings : Strings {
     override val catalogEmptyBody = "შეცვალე ფილტრები ან გაასუფთავე მოდელის ველი."
     override val sortNearest = "უახლოესი"
     override val sortRating = "ტოპ რეიტინგი"
-    override val sortExperience = "გამოცდილება"
 
     override val cardCall = "ზარი"
     override val cardWhatsapp = "WhatsApp"
@@ -707,6 +764,10 @@ object GeorgianStrings : Strings {
 
     override val badgeVerified = "ვერიფიცირებული"
     override val badgeUnverified = "არავერიფიცირებული"
+    override val badgeVip = "VIP"
+    override val badgeSuperVip = "SUPER VIP"
+    override val distanceKmSuffix = "კმ"
+    override val distanceMSuffix = "მ"
 
     override val about = "შესახებ"
     override val specialties = "სპეციალობები"
