@@ -253,6 +253,12 @@ fun App() {
                             authVm.logout()
                             resetTo(Route.Login)
                         },
+                        onDeleteAccount = { onError ->
+                            authVm.deleteAccount(
+                                onSuccess = { resetTo(Route.Login) },
+                                onError = onError,
+                            )
+                        },
                         onOpenDashboard = { push(Route.MechanicDashboard) },
                         onSignIn = { authVm.clearError(); resetTo(Route.Login) },
                     )

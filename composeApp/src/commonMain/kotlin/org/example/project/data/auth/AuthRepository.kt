@@ -49,4 +49,11 @@ class AuthRepository(
         storage.clear()
         ApiClient.markTokensChanged()
     }
+
+    suspend fun deleteAccount() {
+        api.deleteAccount()
+        // Account is gone server-side — drop the local session too.
+        storage.clear()
+        ApiClient.markTokensChanged()
+    }
 }

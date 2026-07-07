@@ -278,6 +278,9 @@ interface Strings {
     val profileLogoutAction: String
     val profileLogoutConfirmTitle: String
     val profileLogoutConfirmMessage: String
+    val profileDeleteAction: String
+    val profileDeleteConfirmTitle: String
+    val profileDeleteConfirmMessage: String
     fun profileRole(role: String): String
 
     // Specialty names
@@ -549,6 +552,9 @@ object EnglishStrings : Strings {
     override val profileLogoutAction = "Sign out"
     override val profileLogoutConfirmTitle = "Sign out?"
     override val profileLogoutConfirmMessage = "You'll need to sign in again to use the app."
+    override val profileDeleteAction = "Delete account"
+    override val profileDeleteConfirmTitle = "Delete account?"
+    override val profileDeleteConfirmMessage = "This permanently deletes your account and all related data. This action can't be undone."
     override fun profileRole(role: String) = when (role) {
         "user" -> "Customer"
         "mechanic" -> "Mechanic"
@@ -837,6 +843,9 @@ object GeorgianStrings : Strings {
     override val profileLogoutAction = "გასვლა"
     override val profileLogoutConfirmTitle = "გავიდე ანგარიშიდან?"
     override val profileLogoutConfirmMessage = "აპლიკაციის გამოყენებისთვის ხელახლა შესვლა მოგიწევს."
+    override val profileDeleteAction = "ანგარიშის წაშლა"
+    override val profileDeleteConfirmTitle = "წავშალო ანგარიში?"
+    override val profileDeleteConfirmMessage = "ეს სამუდამოდ წაშლის თქვენს ანგარიშს და ყველა დაკავშირებულ მონაცემს. მოქმედება შეუქცევადია."
     override fun profileRole(role: String) = when (role) {
         "user" -> "მომხმარებელი"
         "mechanic" -> "მექანიკოსი"

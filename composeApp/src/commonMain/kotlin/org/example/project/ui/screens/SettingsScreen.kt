@@ -44,11 +44,15 @@ fun SettingsScreen(
     theme: CraftsmenColors,
     user: UserDto?,
     onLogout: () -> Unit,
+    onDeleteAccount: (onError: (String) -> Unit) -> Unit = {},
     onOpenDashboard: (() -> Unit)? = null,
     onSignIn: (() -> Unit)? = null,
 ) {
     val s = LocalStrings.current
     var confirming by remember { mutableStateOf(false) }
+    var confirmingDelete by remember { mutableStateOf(false) }
+    var deletingAccount by remember { mutableStateOf(false) }
+    var deleteError by remember { mutableStateOf<String?>(null) }
 
     Column(
         modifier = Modifier
@@ -100,6 +104,30 @@ fun SettingsScreen(
                 onClick = { confirming = true },
                 enabled = true,
             )
+
+            Spacer(Modifier.height(12.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(12.dp))
+                    .clickable(enabled = !deletingAccount) {
+                        deleteError = null
+                        confirmingDelete = true
+                    }
+                    .padding(vertical = 12.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    text = s.profileDeleteAction,
+                    color = theme.danger,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                )
+            }
+            deleteError?.let {
+                Spacer(Modifier.height(6.dp))
+                Text(text = it, color = theme.danger, fontSize = 12.sp)
+            }
         }
 
         Spacer(Modifier.height(40.dp))
@@ -117,6 +145,26 @@ fun SettingsScreen(
                 onLogout()
             },
             onCancel = { confirming = false },
+        )
+    }
+
+    if (confirmingDelete) {
+        ConfirmDialog(
+            theme = theme,
+            title = s.profileDeleteConfirmTitle,
+            message = s.profileDeleteConfirmMessage,
+            confirmText = s.profileDeleteAction,
+            cancelText = s.cancel,
+            onConfirm = {
+                confirmingDelete = false
+                deletingAccount = true
+                deleteError = null
+                onDeleteAccount { msg ->
+                    deletingAccount = false
+                    deleteError = msg
+                }
+            },
+            onCancel = { confirmingDelete = false },
         )
     }
 }

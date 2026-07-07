@@ -83,6 +83,27 @@ class AuthViewModel(
         _error.value = null
     }
 
+    /** Permanently deletes the account, then drops to the anonymous state. */
+    fun deleteAccount(onSuccess: () -> Unit, onError: (String) -> Unit = {}) {
+        if (_busy.value) return
+        _busy.value = true
+        _error.value = null
+        viewModelScope.launch {
+            runCatching { repo.deleteAccount() }
+                .onSuccess {
+                    _state.value = AuthState.Anonymous
+                    _busy.value = false
+                    onSuccess()
+                }
+                .onFailure {
+                    _busy.value = false
+                    val msg = it.message ?: "Failed to delete account"
+                    _error.value = msg
+                    onError(msg)
+                }
+        }
+    }
+
     fun clearError() {
         _error.value = null
     }

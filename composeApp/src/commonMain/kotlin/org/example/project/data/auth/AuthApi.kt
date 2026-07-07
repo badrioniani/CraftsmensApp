@@ -2,6 +2,7 @@ package org.example.project.data.auth
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -125,6 +126,17 @@ class AuthApi(
         if (!response.status.isSuccess()) {
             throw AuthApiException(
                 extractApiError(response.bodyAsText(), default = "Invalid or expired code"),
+                response.status.value,
+            )
+        }
+    }
+
+    /** Permanently deletes the authenticated user's account (Apple 5.1.1(v)). */
+    suspend fun deleteAccount() {
+        val response = client.delete("$baseUrl/auth/me/")
+        if (!response.status.isSuccess()) {
+            throw AuthApiException(
+                extractApiError(response.bodyAsText(), default = "Failed to delete account"),
                 response.status.value,
             )
         }

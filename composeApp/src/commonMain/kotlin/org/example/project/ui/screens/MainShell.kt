@@ -25,6 +25,7 @@ fun MainShell(
     onPickShop: (Shop) -> Unit,
     currentUser: UserDto?,
     onLogout: () -> Unit,
+    onDeleteAccount: (onError: (String) -> Unit) -> Unit,
     onOpenDashboard: () -> Unit,
     onSignIn: () -> Unit,
 ) {
@@ -51,6 +52,7 @@ fun MainShell(
                     theme = theme,
                     user = currentUser,
                     onLogout = onLogout,
+                    onDeleteAccount = onDeleteAccount,
                     onOpenDashboard = onOpenDashboard,
                     onSignIn = onSignIn,
                 )
