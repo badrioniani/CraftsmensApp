@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -38,9 +37,6 @@ import org.example.project.data.Mechanic
 import org.example.project.data.Review
 import org.example.project.data.mechanics.MechanicApi
 import org.example.project.data.mechanics.toUiModel
-import org.example.project.ui.components.AppButton
-import org.example.project.ui.components.IconButton40
-import org.example.project.ui.components.MonoLabel
 import org.example.project.ui.components.Section
 import org.example.project.ui.components.StickyBottom
 import org.example.project.ui.i18n.LocalStrings

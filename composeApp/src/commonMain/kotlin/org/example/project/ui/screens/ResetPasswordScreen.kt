@@ -1,6 +1,7 @@
 package org.example.project.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -34,15 +35,15 @@ import org.example.project.ui.theme.CraftsmenColors
 @Composable
 fun ResetPasswordScreen(
     theme: CraftsmenColors,
-    email: String,
-    prefilledCode: String?,
+    phone: String,
     onBack: () -> Unit,
-    onConfirm: (email: String, code: String, newPassword: String) -> Unit,
+    onResendCode: () -> Unit,
+    onConfirm: (code: String, newPassword: String) -> Unit,
     busy: Boolean = false,
     errorText: String? = null,
 ) {
     val s = LocalStrings.current
-    var code by remember { mutableStateOf(prefilledCode.orEmpty()) }
+    var code by remember { mutableStateOf("") }
     var newPassword by remember { mutableStateOf("") }
     val canSubmit = code.length == 6 && newPassword.length >= 8 && !busy
 
@@ -78,7 +79,7 @@ fun ResetPasswordScreen(
         )
         Spacer(Modifier.height(2.dp))
         Text(
-            text = email,
+            text = phone,
             color = theme.textDim,
             fontSize = 13.sp,
             fontWeight = FontWeight.Medium,
@@ -95,14 +96,14 @@ fun ResetPasswordScreen(
             imeAction = ImeAction.Next,
         )
 
-        if (!prefilledCode.isNullOrBlank()) {
-            Spacer(Modifier.height(6.dp))
-            Text(
-                text = s.resetDemoNote,
-                color = theme.textMute,
-                fontSize = 11.sp,
-            )
-        }
+        Spacer(Modifier.height(8.dp))
+        Text(
+            text = s.resetResendAction,
+            color = if (busy) theme.textMute else theme.accent,
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Medium,
+            modifier = Modifier.clickable(enabled = !busy, onClick = onResendCode),
+        )
 
         Spacer(Modifier.height(16.dp))
         AuthTextField(
@@ -114,7 +115,7 @@ fun ResetPasswordScreen(
             leading = { IconLock(size = 18.dp, color = theme.textDim) },
             isPassword = true,
             imeAction = ImeAction.Done,
-            onImeAction = { if (canSubmit) onConfirm(email, code, newPassword) },
+            onImeAction = { if (canSubmit) onConfirm(code, newPassword) },
         )
 
         if (!errorText.isNullOrBlank()) {
@@ -130,7 +131,7 @@ fun ResetPasswordScreen(
         AppButton(
             theme = theme,
             text = s.resetConfirmAction,
-            onClick = { onConfirm(email, code, newPassword) },
+            onClick = { onConfirm(code, newPassword) },
             enabled = canSubmit,
             busy = busy,
         )

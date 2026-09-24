@@ -44,6 +44,7 @@ import org.example.project.ui.icons.IconPhone
 import org.example.project.ui.icons.IconUser
 import org.example.project.ui.icons.IconWrench
 import org.example.project.ui.theme.CraftsmenColors
+import org.example.project.ui.util.isValidGeorgianPhone
 
 data class RegisterFormResult(
     val name: String,
@@ -55,16 +56,6 @@ data class RegisterFormResult(
 
 private val EmailRegex = Regex("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")
 
-// Strips the same junk Django's normalize_georgian_phone() strips so the same
-// numbers we accept here pass the server-side check 1:1.
-private val PhoneStripRegex = Regex("[\\s\\-().+]")
-// Mirrors `^\+?(?:995|0)?([5][0-9]{8})$` post-strip: optional 995/0 then 9 digits starting with 5.
-private val PhoneRegex = Regex("^(?:995|0)?5[0-9]{8}$")
-
-private fun isValidGeorgianPhone(value: String): Boolean {
-    if (value.isBlank()) return false
-    return PhoneRegex.matches(PhoneStripRegex.replace(value, ""))
-}
 
 /** Friendly password-strength heuristic mirroring the web app. Returns 0–4. */
 private fun scorePassword(pw: String): Int {

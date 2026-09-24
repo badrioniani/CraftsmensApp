@@ -31,11 +31,14 @@ class AuthRepository(
             .getOrNull()
     }
 
-    suspend fun requestPasswordReset(email: String): PasswordResetResponse =
-        api.requestPasswordReset(email.trim())
+    suspend fun requestPasswordReset(phone: String) =
+        api.requestPasswordReset(phone.trim())
 
-    suspend fun confirmPasswordReset(email: String, code: String, newPassword: String) =
-        api.confirmPasswordReset(email.trim(), code.trim(), newPassword)
+    /** Verifies the SMS code, then sets the new password with the token it yields. */
+    suspend fun confirmPasswordReset(phone: String, code: String, newPassword: String) {
+        val resetToken = api.verifyPasswordReset(phone.trim(), code.trim())
+        api.confirmPasswordReset(resetToken, newPassword)
+    }
 
     suspend fun sendPhoneCode() = api.sendPhoneCode()
 
@@ -46,6 +49,13 @@ class AuthRepository(
     }
 
     fun logout() {
+        storage.clear()
+        ApiClient.markTokensChanged()
+    }
+
+    suspend fun deleteAccount() {
+        api.deleteAccount()
+        // Account is gone server-side — drop the local session too.
         storage.clear()
         ApiClient.markTokensChanged()
     }
