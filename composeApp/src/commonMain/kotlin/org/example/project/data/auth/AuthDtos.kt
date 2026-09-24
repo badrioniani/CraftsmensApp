@@ -49,20 +49,20 @@ data class RefreshRequest(val refresh: String)
 @Serializable
 data class RefreshResponse(val access: String)
 
+// Password reset is SMS-based: request a code to the registered phone, trade
+// the code for a short-lived signed token, then set the new password with it.
 @Serializable
-data class PasswordResetRequest(val email: String)
+data class PasswordResetRequest(val phone: String)
 
 @Serializable
-data class PasswordResetResponse(
-    val detail: String,
-    val code: String? = null,
-    @SerialName("expires_in_minutes") val expiresInMinutes: Int? = null,
-)
+data class PasswordResetVerifyRequest(val phone: String, val code: String)
+
+@Serializable
+data class PasswordResetVerifyResponse(@SerialName("reset_token") val resetToken: String)
 
 @Serializable
 data class PasswordResetConfirmRequest(
-    val email: String,
-    val code: String,
+    @SerialName("reset_token") val resetToken: String,
     @SerialName("new_password") val newPassword: String,
 )
 

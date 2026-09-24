@@ -108,15 +108,15 @@ class AuthViewModel(
         _error.value = null
     }
 
-    fun requestPasswordReset(email: String, onSuccess: (demoCode: String?) -> Unit) {
+    fun requestPasswordReset(phone: String, onSuccess: () -> Unit) {
         if (_busy.value) return
         _busy.value = true
         _error.value = null
         viewModelScope.launch {
-            runCatching { repo.requestPasswordReset(email) }
+            runCatching { repo.requestPasswordReset(phone) }
                 .onSuccess {
                     _busy.value = false
-                    onSuccess(it.code)
+                    onSuccess()
                 }
                 .onFailure {
                     _busy.value = false
@@ -126,7 +126,7 @@ class AuthViewModel(
     }
 
     fun confirmPasswordReset(
-        email: String,
+        phone: String,
         code: String,
         newPassword: String,
         onSuccess: () -> Unit,
@@ -135,7 +135,7 @@ class AuthViewModel(
         _busy.value = true
         _error.value = null
         viewModelScope.launch {
-            runCatching { repo.confirmPasswordReset(email, code, newPassword) }
+            runCatching { repo.confirmPasswordReset(phone, code, newPassword) }
                 .onSuccess {
                     _busy.value = false
                     onSuccess()

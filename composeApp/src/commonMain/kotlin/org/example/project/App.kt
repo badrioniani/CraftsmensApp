@@ -177,9 +177,9 @@ fun App() {
                     is Route.ForgotPassword -> ForgotPasswordScreen(
                         theme = theme,
                         onBack = { authVm.clearError(); pop() },
-                        onSendCode = { email ->
-                            authVm.requestPasswordReset(email) { demoCode ->
-                                replace(Route.ResetPassword(email = email, prefilledCode = demoCode))
+                        onSendCode = { phone ->
+                            authVm.requestPasswordReset(phone) {
+                                replace(Route.ResetPassword(phone = phone))
                             }
                         },
                         busy = authBusy,
@@ -187,11 +187,11 @@ fun App() {
                     )
                     is Route.ResetPassword -> ResetPasswordScreen(
                         theme = theme,
-                        email = top.email,
-                        prefilledCode = top.prefilledCode,
+                        phone = top.phone,
                         onBack = { authVm.clearError(); pop() },
-                        onConfirm = { email, code, newPassword ->
-                            authVm.confirmPasswordReset(email, code, newPassword) {
+                        onResendCode = { authVm.requestPasswordReset(top.phone) {} },
+                        onConfirm = { code, newPassword ->
+                            authVm.confirmPasswordReset(top.phone, code, newPassword) {
                                 resetTo(Route.Login)
                             }
                         },

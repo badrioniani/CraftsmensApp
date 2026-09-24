@@ -35,7 +35,7 @@ interface Strings {
     val resetNewPasswordLabel: String
     val resetNewPasswordPlaceholder: String
     val resetConfirmAction: String
-    val resetDemoNote: String
+    val resetResendAction: String
     val noAccountQuestion: String
     val registerCta: String
     val orDivider: String
@@ -306,16 +306,16 @@ object EnglishStrings : Strings {
     override val loginAction = "Sign in"
 
     override val forgotTitle = "Reset password"
-    override val forgotSubtitle = "Enter your email and we'll send a code to reset your password."
+    override val forgotSubtitle = "Enter the phone number on your account and we'll text you a reset code."
     override val forgotSendCodeAction = "Send code"
     override val resetTitle = "Enter your code"
-    override val resetSubtitle = "Type the 6-digit code and pick a new password."
+    override val resetSubtitle = "Type the 6-digit code we sent by SMS and pick a new password."
     override val resetCodeLabel = "Reset code"
     override val resetCodePlaceholder = "123456"
     override val resetNewPasswordLabel = "New password"
     override val resetNewPasswordPlaceholder = "At least 8 characters"
     override val resetConfirmAction = "Reset password"
-    override val resetDemoNote = "Demo mode: code prefilled from server."
+    override val resetResendAction = "Resend code"
     override val noAccountQuestion = "New here?"
     override val registerCta = "Create account"
     override val orDivider = "OR"
@@ -359,7 +359,7 @@ object EnglishStrings : Strings {
     override val pwStrengthGood = "Good — solid choice."
     override val pwStrengthStrong = "Strong — nice work."
     override val registerTermsNotice =
-        "By creating an account you agree to our terms and accept that this is a demo project."
+        "By creating an account you agree to our terms of use and privacy policy."
 
     override val continueAsGuest = "Continue as guest"
     override val guestModeTitle = "You're browsing as a guest"
@@ -597,16 +597,16 @@ object GeorgianStrings : Strings {
     override val loginAction = "შესვლა"
 
     override val forgotTitle = "პაროლის აღდგენა"
-    override val forgotSubtitle = "შეიყვანე ელფოსტა და გამოგიგზავნით კოდს."
+    override val forgotSubtitle = "შეიყვანე ანგარიშზე მიბმული ტელეფონის ნომერი და SMS-ით გამოგიგზავნით კოდს."
     override val forgotSendCodeAction = "კოდის გაგზავნა"
     override val resetTitle = "შეიყვანე კოდი"
-    override val resetSubtitle = "ჩაწერე 6-ციფრიანი კოდი და აირჩიე ახალი პაროლი."
+    override val resetSubtitle = "ჩაწერე SMS-ით მიღებული 6-ციფრიანი კოდი და აირჩიე ახალი პაროლი."
     override val resetCodeLabel = "კოდი"
     override val resetCodePlaceholder = "123456"
     override val resetNewPasswordLabel = "ახალი პაროლი"
     override val resetNewPasswordPlaceholder = "მინიმუმ 8 სიმბოლო"
     override val resetConfirmAction = "პაროლის აღდგენა"
-    override val resetDemoNote = "დემო რეჟიმი: კოდი წინასწარ ჩაწერილია."
+    override val resetResendAction = "კოდის ხელახლა გაგზავნა"
     override val noAccountQuestion = "ახალი ხარ აქ?"
     override val registerCta = "ანგარიშის შექმნა"
     override val orDivider = "ან"
@@ -650,7 +650,7 @@ object GeorgianStrings : Strings {
     override val pwStrengthGood = "კარგი — საიმედო არჩევანი."
     override val pwStrengthStrong = "ძლიერი — მშვენიერია."
     override val registerTermsNotice =
-        "ანგარიშის შექმნით ეთანხმები პირობებს და აცნობიერებ, რომ ეს სადემონსტრაციო პროექტია."
+        "ანგარიშის შექმნით ეთანხმები გამოყენების პირობებს და კონფიდენციალურობის პოლიტიკას."
 
     override val continueAsGuest = "გაგრძელება სტუმრად"
     override val guestModeTitle = "ათვალიერებ როგორც სტუმარი"

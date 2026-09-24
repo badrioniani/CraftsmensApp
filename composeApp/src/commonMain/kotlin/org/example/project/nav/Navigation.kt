@@ -9,7 +9,7 @@ sealed class Route {
     data object Splash : Route()
     data object Login : Route()
     data object ForgotPassword : Route()
-    data class ResetPassword(val email: String, val prefilledCode: String? = null) : Route()
+    data class ResetPassword(val phone: String) : Route()
     data object RegisterPicker : Route()
     data class Register(val role: UserRole) : Route()
     data object VerifyPhone : Route()

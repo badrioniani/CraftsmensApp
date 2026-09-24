@@ -80,10 +80,12 @@ class AuthApi(
         return response.body()
     }
 
-    suspend fun requestPasswordReset(email: String): PasswordResetResponse {
-        val response = client.post("$baseUrl/auth/password/reset/") {
+    /** Sends an SMS code to [phone]. The server answers the same for unknown
+     *  numbers, so success does not mean an account exists. */
+    suspend fun requestPasswordReset(phone: String) {
+        val response = client.post("$baseUrl/auth/password-reset/request/") {
             contentType(ContentType.Application.Json)
-            setBody(PasswordResetRequest(email = email))
+            setBody(PasswordResetRequest(phone = phone))
         }
         if (!response.status.isSuccess()) {
             throw AuthApiException(
@@ -91,13 +93,27 @@ class AuthApi(
                 response.status.value,
             )
         }
-        return response.body()
     }
 
-    suspend fun confirmPasswordReset(email: String, code: String, newPassword: String) {
-        val response = client.post("$baseUrl/auth/password/reset/confirm/") {
+    /** Trades a correct SMS code for the signed token that authorises [confirmPasswordReset]. */
+    suspend fun verifyPasswordReset(phone: String, code: String): String {
+        val response = client.post("$baseUrl/auth/password-reset/verify/") {
             contentType(ContentType.Application.Json)
-            setBody(PasswordResetConfirmRequest(email = email, code = code, newPassword = newPassword))
+            setBody(PasswordResetVerifyRequest(phone = phone, code = code))
+        }
+        if (!response.status.isSuccess()) {
+            throw AuthApiException(
+                extractApiError(response.bodyAsText(), default = "Invalid or expired code"),
+                response.status.value,
+            )
+        }
+        return response.body<PasswordResetVerifyResponse>().resetToken
+    }
+
+    suspend fun confirmPasswordReset(resetToken: String, newPassword: String) {
+        val response = client.post("$baseUrl/auth/password-reset/confirm/") {
+            contentType(ContentType.Application.Json)
+            setBody(PasswordResetConfirmRequest(resetToken = resetToken, newPassword = newPassword))
         }
         if (!response.status.isSuccess()) {
             throw AuthApiException(

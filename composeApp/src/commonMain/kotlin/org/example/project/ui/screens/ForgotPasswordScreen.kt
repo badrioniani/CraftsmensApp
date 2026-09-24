@@ -28,20 +28,22 @@ import org.example.project.ui.components.AuthTextField
 import org.example.project.ui.components.IconButton40
 import org.example.project.ui.i18n.LocalStrings
 import org.example.project.ui.icons.IconBack
-import org.example.project.ui.icons.IconMail
+import org.example.project.ui.icons.IconPhone
 import org.example.project.ui.theme.CraftsmenColors
+import org.example.project.ui.util.isValidGeorgianPhone
 
 @Composable
 fun ForgotPasswordScreen(
     theme: CraftsmenColors,
     onBack: () -> Unit,
-    onSendCode: (email: String) -> Unit,
+    onSendCode: (phone: String) -> Unit,
     busy: Boolean = false,
     errorText: String? = null,
 ) {
     val s = LocalStrings.current
-    var email by remember { mutableStateOf("") }
-    val canSubmit = email.isNotBlank() && !busy
+    var phone by remember { mutableStateOf("") }
+    val phoneValid = isValidGeorgianPhone(phone)
+    val canSubmit = phoneValid && !busy
 
     Column(
         modifier = Modifier
@@ -77,15 +79,24 @@ fun ForgotPasswordScreen(
         Spacer(Modifier.height(28.dp))
         AuthTextField(
             theme = theme,
-            value = email,
-            onValueChange = { email = it },
-            placeholder = s.emailPlaceholder,
-            label = s.emailLabel,
-            leading = { IconMail(size = 18.dp, color = theme.textDim) },
-            keyboardType = KeyboardType.Email,
+            value = phone,
+            onValueChange = { phone = it },
+            placeholder = s.phonePlaceholder,
+            label = s.phoneLabel,
+            leading = { IconPhone(size = 18.dp, color = theme.textDim) },
+            keyboardType = KeyboardType.Phone,
             imeAction = ImeAction.Done,
-            onImeAction = { if (canSubmit) onSendCode(email) },
+            onImeAction = { if (canSubmit) onSendCode(phone) },
         )
+
+        if (phone.isNotBlank() && !phoneValid) {
+            Spacer(Modifier.height(6.dp))
+            Text(
+                text = s.phoneInvalid,
+                color = theme.danger,
+                fontSize = 12.sp,
+            )
+        }
 
         if (!errorText.isNullOrBlank()) {
             Spacer(Modifier.height(12.dp))
@@ -100,7 +111,7 @@ fun ForgotPasswordScreen(
         AppButton(
             theme = theme,
             text = s.forgotSendCodeAction,
-            onClick = { onSendCode(email) },
+            onClick = { onSendCode(phone) },
             enabled = canSubmit,
             busy = busy,
         )
